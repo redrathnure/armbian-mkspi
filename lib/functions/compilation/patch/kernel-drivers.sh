@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-compilation_prepare() {
+
+function prepare_extra_kernel_drivers() {
 	
 	source ${SRC}/lib/functions/compilation/patch/drivers_network.sh
 

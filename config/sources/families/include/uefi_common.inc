@@ -21,8 +21,8 @@ case "${BRANCH}" in
 	edge)
 		export DISTRO_GENERIC_KERNEL=no
 		export LINUXCONFIG="linux-uefi-${LINUXFAMILY}-${BRANCH}"
-		export KERNEL_MAJOR_MINOR="6.0"                       # Major and minor versions of this kernel. For mainline caching.
-		export KERNELBRANCH="branch:linux-6.0.y"              # Branch or tag to build from. It should match MAJOR_MINOR
+		export KERNEL_MAJOR_MINOR="6.1"                       # Major and minor versions of this kernel (for armbian-next)
+		export KERNELBRANCH='tag:v6.1-rc8'                    # @TODO: Soon to be KERNELBRANCH='branch:linux-6.1.y'
 		export KERNELPATCHDIR="uefi-${LINUXFAMILY}-${BRANCH}" # Might be empty.
 		;;
 esac

@@ -1,0 +1,353 @@
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index 5061f149d..28df0349b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -8,7 +8,7 @@
+ #include "rk3328.dtsi"
+ 
+ / {
+-	model = "Firefly roc-rk3328-cc";
++	model = "Makerbase mkspi";
+ 	compatible = "firefly,roc-rk3328-cc", "rockchip,rk3328";
+ 
+ 	aliases {
+@@ -67,21 +67,23 @@ vcc_sd: sdmmc-regulator {
+ 
+ 	vccio_sd: sdmmcio-regulator {
+ 		compatible = "regulator-gpio";
+-		gpios = <&grf_gpio 0 GPIO_ACTIVE_HIGH>;
+-		states = <1800000 0x1>,
+-			 <3300000 0x0>;
++		gpios = <&gpio2 RK_PC4 GPIO_ACTIVE_HIGH>;
++		pinctrl-0 = <&sdio_vcc_pin>;
++		pinctrl-names = "default";		
++		states = <1800000 0x0>,
++			 <3300000 0x1>;
+ 		regulator-name = "vccio_sd";
+ 		regulator-type = "voltage";
+ 		regulator-min-microvolt = <1800000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		regulator-always-on;
+-		vin-supply = <&vcc_sys>;
++		vin-supply = <&vcc_io>;
+ 	};
+ 
+ 	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+-		gpio = <&gpio1 RK_PD2 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&usb20_host_drv>;
+ 		regulator-name = "vcc_host1_5v";
+@@ -205,7 +207,7 @@ &gmac2io {
+ 	snps,txpbl = <0x4>;
+ 	tx_delay = <0x24>;
+ 	rx_delay = <0x18>;
+-	status = "okay";
++	status = "disable";
+ };
+ 
+ &gpu {
+@@ -340,19 +342,19 @@ regulator-state-mem {
+ };
+ 
+ &i2s0 {
+-	status = "okay";
++	status = "disable";
+ };
+ 
+ &i2s1 {
+-	status = "okay";
++	status = "disable";
+ };
+ 
+ &i2s0 {
+-	status = "okay";
++	status = "disable";
+ };
+ 
+ &i2s1 {
+-	status = "okay";
++	status = "disable";
+ };
+ 
+ &io_domains {
+@@ -361,7 +363,7 @@ &io_domains {
+ 	vccio1-supply = <&vcc_io>;
+ 	vccio2-supply = <&vcc18_emmc>;
+ 	vccio3-supply = <&vccio_sd>;
+-	vccio4-supply = <&vcc_18>;
++	vccio4-supply = <&vcc_io>;
+ 	vccio5-supply = <&vcc_io>;
+ 	vccio6-supply = <&vcc_io>;
+ 	pmuio-supply = <&vcc_io>;
+@@ -376,7 +378,7 @@ ir_int: ir-int {
+ 
+ 	pmic {
+ 		pmic_int_l: pmic-int-l {
+-			rockchip,pins = <1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_up>;
++			rockchip,pins = <2 RK_PA6 RK_FUNC_GPIO &pcfg_pull_up>;
+ 		};
+ 	};
+ 
+@@ -385,6 +387,31 @@ usb20_host_drv: usb20-host-drv {
+ 			rockchip,pins = <1 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
++
++	sd {
++		sdio_vcc_pin: sdio-vcc-pin {
++			rockchip,pins = <2 RK_PC4 RK_FUNC_GPIO &pcfg_pull_up>;
++ 		};
++ 	};
++	
++	touchscreen {
++		pinctrl_tsc2046_pendown: pinctrl_tsc2046_pendown {
++			rockchip,pins = <1 RK_PC6 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++		pinctrl_tsc2046_cs: pinctrl_tsc2046_cs {
++			rockchip,pins = <3 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++	lcd {
++		pinctrl_ili9341_cs: pinctrl_ili9341_cs {
++			rockchip,pins = <3 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
++	spi0_cs2 {
++		pinctrl_spi0_cs2: pinctrl_spi0_cs2 {
++			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++	};
+ };
+ 
+ &sdmmc {
+@@ -435,6 +462,70 @@ &u2phy_otg {
+ 	status = "okay";
+ };
+ 
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_xfer &uart0_cts>;
++ 	status = "okay";
++};
++
++&spi0 {
++	status = "okay";
++	max-freq = <48000000>;
++	dma-names = "tx", "rx";
++	cs-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>,<&gpio3 RK_PA7 GPIO_ACTIVE_LOW>,<&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
++	
++	spi_for_lcd@0 {
++		compatible ="ilitek,ili9341";
++		pinctrl-names ="default";
++		pinctrl-0 = <&pinctrl_ili9341_cs>;	
++		reg = <0>;
++		spi-max-frequency = <25000000>;
++		bgr;
++            	fps = <20>;
++            	rotate = <270>;
++            	buswidth = <8>; 
++		dc-gpios = <&gpio3 RK_PA6 GPIO_ACTIVE_HIGH>;  /* gpio3 A6 */
++            	reset-gpios = <&gpio3 RK_PA4 GPIO_ACTIVE_LOW>; /* gpio3 A4 */
++            	led-gpios = <&gpio3 RK_PA5 GPIO_ACTIVE_HIGH>;  /* gpio3 A5 */ 
++	    	status = "okay";
++	};
++	
++	spi_for_touch@1 {
++		reg = <1>;
++		compatible = "ti,tsc2046";
++		pinctrl-names ="default";
++		pinctrl-0 = <&pinctrl_tsc2046_pendown &pinctrl_tsc2046_cs>;	
++		ti,x-max = /bits/ 16 <3776>;
++		ti,x-min = /bits/ 16 <164>;
++		ti,y-min = /bits/ 16 <201>;
++		ti,y-max = /bits/ 16 <3919>;
++		ti,x-plate-ohms = /bits/ 16 <40>;
++		ti,pressure-max = /bits/ 16 <255>;
++	/*	touchscreen-fuzz-x = <16>;
++		touchscreen-fuzz-y = <16>;
++		touchscreen-fuzz-pressure = <10>;*/
++		ti,swap-xy = <1>;
++		touchscreen-inverted-y = <1>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <22 0>;
++		spi-max-frequency = <2000000>;
++		pendown-gpio = <&gpio1 RK_PC6 0>;
++		vcc-supply = <&vcc_io>;		
++		wakeup-source;
++		status = "okay";
++	};
++	
++	spi_for_cs2@2 {
++		reg = <2>;
++		compatible ="rockchip,spi_test_bus1_cs2";
++		pinctrl-names ="default";
++		pinctrl-0 = <&pinctrl_spi0_cs2>;			
++		spi-max-frequency = <5000000>;
++		status = "okay";
++	};
++};
++
++
+ &uart2 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index 301c5ce6a..561186d70 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -461,7 +461,7 @@ spi0: spi@ff190000 {
+ 		dmas = <&dmac 8>, <&dmac 9>;
+ 		dma-names = "tx", "rx";
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&spi0m2_clk &spi0m2_tx &spi0m2_rx &spi0m2_cs0>;
++		pinctrl-0 = <&spi0m2_clk &spi0m2_tx &spi0m2_rx>;
+ 		status = "disabled";
+ 	};
+ 
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index 6ab048ba8..ba65423fa 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -1277,11 +1277,11 @@ static const struct drm_display_mode edid_cea_modes_1[] = {
+ 		   4104, 4400, 0, 2160, 2168, 2178, 2250, 0,
+ 		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+ 	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
+-	/* 108 - 1280x720@48Hz 16:9 */
+-	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 90000, 1280, 2240,
+-		   2280, 2500, 0, 720, 725, 730, 750, 0,
++	/* 108 - 800x480@60Hz 5:3, Kenneth */
++	{ DRM_MODE("800x480", DRM_MODE_TYPE_DRIVER, 30240, 800, 850,
++		   920, 960, 0, 480, 510, 513, 525, 0,
+ 		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+-	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
++	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_5_3, },
+ 	/* 109 - 1280x720@48Hz 64:27 */
+ 	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 90000, 1280, 2240,
+ 		   2280, 2500, 0, 720, 725, 730, 750, 0,
+diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+index 2643de034..3ceda7274 100644
+--- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
++++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
+@@ -293,6 +293,7 @@ struct inno_hdmi_phy_drv_data {
+ static const struct pre_pll_config pre_pll_cfg_table[] = {
+ 	{ 27000000,  27000000, 1,  90, 3, 2, 2, 10, 3, 3, 4, 0, 0},
+ 	{ 27000000,  33750000, 1,  90, 1, 3, 3, 10, 3, 3, 4, 0, 0},
++	{ 30240000,  30240000, 5, 504, 3, 2, 2, 20, 4, 2,  2, 0, 0},		// Kenneth
+ 	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2, 2, 0, 0},
+ 	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3, 4, 0, 0xE6AE6B},
+ 	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3, 4, 0, 0},
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index b721b6211..8586f00d0 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -816,6 +816,7 @@ static int rockchip_spi_probe(struct platform_device *pdev)
+ 		goto err_disable_spiclk;
+ 
+ 	rs->dev = &pdev->dev;
++	clk_set_rate(rs->spiclk, 48000000); //manually set to 48Mhz
+ 	rs->freq = clk_get_rate(rs->spiclk);
+ 
+ 	if (!of_property_read_u32(pdev->dev.of_node, "rx-sample-delay-ns",
+diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
+index bf08071e9..b1186e35c 100644
+--- a/drivers/spi/spidev.c
++++ b/drivers/spi/spidev.c
+@@ -690,8 +690,9 @@ MODULE_DEVICE_TABLE(spi, spidev_spi_ids);
+ #ifdef CONFIG_OF
+ static const struct of_device_id spidev_dt_ids[] = {
+ 	{ .compatible = "armbian,spi-dev" },
+-	{ .compatible = "rohm,dh2228fv" },
+-	{ .compatible = "lineartechnology,ltc2488" },
++	/*{ .compatible = "rohm,dh2228fv" },
++	{ .compatible = "lineartechnology,ltc2488" },*/
++	{ .compatible = "rockchip,spi_test_bus1_cs2" },
+ 	{ .compatible = "semtech,sx1301" },
+ 	{ .compatible = "lwn,bk4" },
+ 	{ .compatible = "dh,dhcom-board" },
+diff --git a/drivers/staging/fbtft/fb_ili9341.c b/drivers/staging/fbtft/fb_ili9341.c
+index 9ccd0823c..d214ef19c 100644
+--- a/drivers/staging/fbtft/fb_ili9341.c
++++ b/drivers/staging/fbtft/fb_ili9341.c
+@@ -20,9 +20,9 @@
+ #include "fbtft.h"
+ 
+ #define DRVNAME		"fb_ili9341"
+-#define WIDTH		240
+-#define HEIGHT		320
+-#define TXBUFLEN	(4 * PAGE_SIZE)
++#define WIDTH		320
++#define HEIGHT		480
++#define TXBUFLEN	0xfffe // 4 * PAGE_SIZE 
+ #define DEFAULT_GAMMA	"1F 1A 18 0A 0F 06 45 87 32 0A 07 02 07 05 00\n" \
+ 			"00 25 27 05 10 09 3A 78 4D 05 18 0D 38 3A 1F"
+ 
+@@ -34,6 +34,32 @@ static int init_display(struct fbtft_par *par)
+ 	write_reg(par, MIPI_DCS_SOFT_RESET);
+ 	mdelay(5);
+ 	write_reg(par, MIPI_DCS_SET_DISPLAY_OFF);
++	
++	/*these are for st7796*/
++	/* --------------------------------------------------------- */
++	
++	write_reg(par, 0xf0, 0xc3);
++	write_reg(par, 0xf0, 0x96);
++	write_reg(par, 0x36, 0x28);
++	write_reg(par, 0x3A, 0x55);
++	write_reg(par, 0xB4, 0x01);
++	write_reg(par, 0xB7, 0xc6);
++	write_reg(par, 0xE8, 0x40, 0x8a, 0x00, 0x00, 0x29, 0x19, 0xa5, 0x33);
++	write_reg(par, 0xc1, 0x06);
++	write_reg(par, 0xc2, 0xa7);
++	write_reg(par, 0xc5, 0x18);
++	write_reg(par, 0xE0, 0xf0, 0x09, 0x0b, 0x06, 0x04, 0x15, 0x2f, 0x54, 0x42, 0x3c, 0x17, 0x14, 0x18, 0x1b);
++	write_reg(par, 0xE1, 0xf0, 0x09, 0x0b, 0x06, 0x04, 0x03, 0x2d, 0x43, 0x42, 0x3b, 0x16, 0x14, 0x17, 0x1b);
++	write_reg(par, 0xf0, 0x3c);
++	write_reg(par, 0xf0, 0x69);
++	write_reg(par, 0x11);
++	mdelay(100);
++	write_reg(par, 0x29);
++	mdelay(20);
++	
++	
++	/*below is for 9341*/
++	#if 0
+ 	/* --------------------------------------------------------- */
+ 	write_reg(par, 0xCF, 0x00, 0x83, 0x30);
+ 	write_reg(par, 0xED, 0x64, 0x03, 0x12, 0x81);
+@@ -62,6 +88,8 @@ static int init_display(struct fbtft_par *par)
+ 	write_reg(par, MIPI_DCS_SET_DISPLAY_ON);
+ 	mdelay(20);
+ 
++	#endif
++
+ 	return 0;
+ }
+ 
+diff --git a/drivers/video/hdmi.c b/drivers/video/hdmi.c
+index 947be761d..334c7243c 100644
+--- a/drivers/video/hdmi.c
++++ b/drivers/video/hdmi.c
+@@ -1071,6 +1071,8 @@ hdmi_picture_aspect_get_name(enum hdmi_picture_aspect picture_aspect)
+ 		return "64:27";
+ 	case HDMI_PICTURE_ASPECT_256_135:
+ 		return "256:135";
++	case HDMI_PICTURE_ASPECT_5_3:
++		return "5:3";
+ 	case HDMI_PICTURE_ASPECT_RESERVED:
+ 		return "Reserved";
+ 	}
+diff --git a/include/linux/hdmi.h b/include/linux/hdmi.h
+index c8ec982ff..fbe3c1dbe 100644
+--- a/include/linux/hdmi.h
++++ b/include/linux/hdmi.h
+@@ -99,6 +99,7 @@ enum hdmi_picture_aspect {
+ 	HDMI_PICTURE_ASPECT_16_9,
+ 	HDMI_PICTURE_ASPECT_64_27,
+ 	HDMI_PICTURE_ASPECT_256_135,
++	HDMI_PICTURE_ASPECT_5_3,
+ 	HDMI_PICTURE_ASPECT_RESERVED,
+ };
+ 

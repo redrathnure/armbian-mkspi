@@ -1,5 +1,5 @@
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 5061f149d..28df0349b 100644
+index 5061f149d..d3bd38b00 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 @@ -8,7 +8,7 @@
@@ -40,7 +40,20 @@ index 5061f149d..28df0349b 100644
  		pinctrl-names = "default";
  		pinctrl-0 = <&usb20_host_drv>;
  		regulator-name = "vcc_host1_5v";
-@@ -205,7 +207,7 @@ &gmac2io {
+@@ -123,12 +125,6 @@ user_led: led-1 {
+ 		};
+ 	};
+ 
+-	ir-receiver {
+-		compatible = "gpio-ir-receiver";
+-		gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
+-		pinctrl-0 = <&ir_int>;
+-		pinctrl-names = "default";
+-	};
+ };
+ 
+ &analog_sound {
+@@ -205,7 +201,7 @@ &gmac2io {
  	snps,txpbl = <0x4>;
  	tx_delay = <0x24>;
  	rx_delay = <0x18>;
@@ -49,7 +62,7 @@ index 5061f149d..28df0349b 100644
  };
  
  &gpu {
-@@ -340,19 +342,19 @@ regulator-state-mem {
+@@ -340,19 +336,19 @@ regulator-state-mem {
  };
  
  &i2s0 {
@@ -73,7 +86,7 @@ index 5061f149d..28df0349b 100644
  };
  
  &io_domains {
-@@ -361,7 +363,7 @@ &io_domains {
+@@ -361,22 +357,17 @@ &io_domains {
  	vccio1-supply = <&vcc_io>;
  	vccio2-supply = <&vcc18_emmc>;
  	vccio3-supply = <&vccio_sd>;
@@ -82,7 +95,14 @@ index 5061f149d..28df0349b 100644
  	vccio5-supply = <&vcc_io>;
  	vccio6-supply = <&vcc_io>;
  	pmuio-supply = <&vcc_io>;
-@@ -376,7 +378,7 @@ ir_int: ir-int {
+ };
+ 
+ &pinctrl {
+-	ir {
+-		ir_int: ir-int {
+-			rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+-		};
+-	};
  
  	pmic {
  		pmic_int_l: pmic-int-l {
@@ -91,7 +111,7 @@ index 5061f149d..28df0349b 100644
  		};
  	};
  
-@@ -385,6 +387,31 @@ usb20_host_drv: usb20-host-drv {
+@@ -385,6 +376,31 @@ usb20_host_drv: usb20-host-drv {
  			rockchip,pins = <1 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
  		};
  	};
@@ -123,7 +143,7 @@ index 5061f149d..28df0349b 100644
  };
  
  &sdmmc {
-@@ -435,6 +462,70 @@ &u2phy_otg {
+@@ -435,6 +451,70 @@ &u2phy_otg {
  	status = "okay";
  };
  

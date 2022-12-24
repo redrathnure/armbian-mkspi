@@ -1,5 +1,5 @@
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 02d9f1fba4f..3ff8b84bb04 100644
+index 02d9f1fba4f..f49485730ce 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 @@ -8,7 +8,7 @@
@@ -11,7 +11,7 @@ index 02d9f1fba4f..3ff8b84bb04 100644
  	compatible = "firefly,roc-rk3328-cc", "rockchip,rk3328";
  
  	aliases {
-@@ -67,15 +67,17 @@ vcc_sd: sdmmc-regulator {
+@@ -67,21 +67,23 @@ vcc_sd: sdmmc-regulator {
  
  	vccio_sd: sdmmcio-regulator {
  		compatible = "regulator-gpio";
@@ -33,7 +33,27 @@ index 02d9f1fba4f..3ff8b84bb04 100644
  	};
  
  	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
-@@ -205,7 +207,7 @@ &gmac2io {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+-		gpio = <&gpio1 RK_PD2 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&usb20_host_drv>;
+ 		regulator-name = "vcc_host1_5v";
+@@ -123,12 +125,6 @@ user_led: led-1 {
+ 		};
+ 	};
+ 
+-	ir-receiver {
+-		compatible = "gpio-ir-receiver";
+-		gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_LOW>;
+-		pinctrl-0 = <&ir_int>;
+-		pinctrl-names = "default";
+-	};
+ };
+ 
+ &analog_sound {
+@@ -205,7 +201,7 @@ &gmac2io {
  	snps,txpbl = <0x4>;
  	tx_delay = <0x24>;
  	rx_delay = <0x18>;
@@ -42,7 +62,7 @@ index 02d9f1fba4f..3ff8b84bb04 100644
  };
  
  &gpu {
-@@ -340,19 +342,19 @@ regulator-state-mem {
+@@ -340,19 +336,19 @@ regulator-state-mem {
  };
  
  &i2s0 {
@@ -66,7 +86,7 @@ index 02d9f1fba4f..3ff8b84bb04 100644
  };
  
  &io_domains {
-@@ -361,7 +363,7 @@ &io_domains {
+@@ -361,28 +357,48 @@ &io_domains {
  	vccio1-supply = <&vcc_io>;
  	vccio2-supply = <&vcc18_emmc>;
  	vccio3-supply = <&vccio_sd>;
@@ -75,8 +95,15 @@ index 02d9f1fba4f..3ff8b84bb04 100644
  	vccio5-supply = <&vcc_io>;
  	vccio6-supply = <&vcc_io>;
  	pmuio-supply = <&vcc_io>;
-@@ -376,13 +378,39 @@ ir_int: ir-int {
+ };
  
+ &pinctrl {
+-	ir {
+-		ir_int: ir-int {
+-			rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+-		};
+-	};
+-
  	pmic {
  		pmic_int_l: pmic-int-l {
 -			rockchip,pins = <1 RK_PD0 RK_FUNC_GPIO &pcfg_pull_up>;
@@ -117,7 +144,7 @@ index 02d9f1fba4f..3ff8b84bb04 100644
  		};
  	};
  };
-@@ -435,6 +463,69 @@ &u2phy_otg {
+@@ -435,6 +451,69 @@ &u2phy_otg {
  	status = "okay";
  };
  

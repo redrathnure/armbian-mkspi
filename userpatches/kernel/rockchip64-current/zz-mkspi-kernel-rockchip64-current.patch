@@ -54,22 +54,22 @@ index 5061f149d..28df0349b 100644
  
  &i2s0 {
 -	status = "okay";
-+	status = "disable";
++	status = "disabled";
  };
  
  &i2s1 {
 -	status = "okay";
-+	status = "disable";
++	status = "disabled";
  };
  
  &i2s0 {
 -	status = "okay";
-+	status = "disable";
++	status = "disabled";
  };
  
  &i2s1 {
 -	status = "okay";
-+	status = "disable";
++	status = "disabled";
  };
  
  &io_domains {

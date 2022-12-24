@@ -144,7 +144,7 @@ index 5061f149d..28df0349b 100644
 +		pinctrl-names ="default";
 +		pinctrl-0 = <&pinctrl_ili9341_cs>;	
 +		reg = <0>;
-+		spi-max-frequency = <25000000>;
++		spi-max-frequency = <24000000>;
 +		bgr;
 +            	fps = <20>;
 +            	rotate = <270>;

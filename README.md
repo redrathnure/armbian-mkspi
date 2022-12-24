@@ -45,10 +45,13 @@ If you know proper way how to orgonise these patches and right places in armbian
 | HDMI Video | yes             | yes            |
 | HDMI Audio | not tested yet  | not tested yet |
 | MKSPI-TS32 TFT display | yes | yes            |
-| MKSPI-TS32 touch screen | not tested yet  | not tested yet |
+| MKSPI-TS32 touch screen | yes (see *1)  | yes (see *1) |
 | Reser button | yes | yes |
 | WiFi dongles | yes | yes |
 | ADXL345 (SPI connectors) | not tested yet | not tested yet |      
+
+*1 - ads7846 module should be loaded manually. E.g. `sudo modprobe ads7846` or `echo ads7846 | sudo tee -a /etc/modules-load.d/modules.conf`
+
 
 ### Known Issues
 Edge, Jammy:

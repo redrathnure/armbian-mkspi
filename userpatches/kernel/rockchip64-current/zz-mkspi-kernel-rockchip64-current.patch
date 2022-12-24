@@ -207,26 +207,6 @@ index 301c5ce6a..561186d70 100644
  		status = "disabled";
  	};
  
-diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 6ab048ba8..ba65423fa 100644
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -1277,11 +1277,11 @@ static const struct drm_display_mode edid_cea_modes_1[] = {
- 		   4104, 4400, 0, 2160, 2168, 2178, 2250, 0,
- 		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
- 	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_64_27, },
--	/* 108 - 1280x720@48Hz 16:9 */
--	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 90000, 1280, 2240,
--		   2280, 2500, 0, 720, 725, 730, 750, 0,
-+	/* 108 - 800x480@60Hz 5:3, Kenneth */
-+	{ DRM_MODE("800x480", DRM_MODE_TYPE_DRIVER, 30240, 800, 850,
-+		   920, 960, 0, 480, 510, 513, 525, 0,
- 		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
--	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
-+	  .picture_aspect_ratio = HDMI_PICTURE_ASPECT_5_3, },
- 	/* 109 - 1280x720@48Hz 64:27 */
- 	{ DRM_MODE("1280x720", DRM_MODE_TYPE_DRIVER, 90000, 1280, 2240,
- 		   2280, 2500, 0, 720, 725, 730, 750, 0,
 diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
 index 2643de034..3ceda7274 100644
 --- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c

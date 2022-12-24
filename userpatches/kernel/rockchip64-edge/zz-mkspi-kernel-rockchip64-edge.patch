@@ -38,7 +38,7 @@ index 02d9f1fba4f..3ff8b84bb04 100644
  	tx_delay = <0x24>;
  	rx_delay = <0x18>;
 -	status = "okay";
-+	status = "disable";
++	status = "disabled";
  };
  
  &gpu {
@@ -47,22 +47,22 @@ index 02d9f1fba4f..3ff8b84bb04 100644
  
  &i2s0 {
 -	status = "okay";
-+	status = "disable";
++	status = "disabled";
  };
  
  &i2s1 {
 -	status = "okay";
-+	status = "disable";
++	status = "disabled";
  };
  
  &i2s0 {
 -	status = "okay";
-+	status = "disable";
++	status = "disabled";
  };
  
  &i2s1 {
 -	status = "okay";
-+	status = "disable";
++	status = "disabled";
  };
  
  &io_domains {

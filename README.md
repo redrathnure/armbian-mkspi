@@ -1,3 +1,128 @@
+# Unofficial Armbian build for [Makerbase MKS PI board](https://github.com/makerbase-mks/MKS-PI). 
+
+TLTR: Unofficial support of Makerbase MKS PI board. Contains `mkspi` board declaration and related kernel and u-boot patches.  
+Please note, result Armbian image is not full replacement for mks distributed image. You have to do yourself all OS configuration and and Klipper components installation.  
+
+**WIP, absolutely no guarantees, you do everything at your own risk.**  
+
+
+
+## Bit of Liric
+
+The MKS-PI ads look good, especially considering the price and the display (e.g. the size fits the Ghost Flying Bear printer). However, the software and support from the manufacturer is terrible.   
+
+There is no source code (yeah, GPL license, of course), no answer to questions, etc. They provide preconfigured Armbian+Klipper, but the image contains random/outdated components and I have problems with WIFI adapters. And who knows what else is hidden in there.    
+
+So the idea was to build a normal Armbian image using the available information (provided patches, circuitry and information from the native image).   
+
+
+## Goals
+
+Make Armbian build with `current` and `edge` kernels.     
+
+Please note:
+* Klipper, Fluid, and other related components are out of scope of this repo, please refer https://github.com/th33xitus/kiauh if you have interest in these topics.
+* original patches were taken from Makerbase repositoy https://github.com/makerbase-mks/armbian-build, this means you have to be mentally ready to see ~~this mess~~ "fast and dirty" approach. I do not have enought knowlage and time to orgonise this mess in right way. 
+If you know proper way how to orgonise these patches and right places in armbian sources for them, you are welcome to discussions or just open PRs.
+* I do not have access to full MKS PI set and cannot test all features. Main goal is to have worked following component:
+  * booting from micro SD
+  * MKSPI-TS32 TFT display (better with working touch screen :) )
+  * HDMI output
+  * USB ports, including USB 3 port
+  * ADXL345 (SPI bus)
+* If you are interested in UART, I2C, EMMC etc features, feel free to step into development/testing or support by hardware.
+* Currently I am focusing only on Ubuntu LTS builds (`current` and `edge` kernels). Feel free to open PRs if you would need non LTS Ubuntu or Debian images.
+
+
+
+## Current status
+
+| Feature | Current (5.15) | Edge (6.1) |
+|:--|:--|:--|
+| USB 2 | yes             | yes            |
+| USB 3 | yes             | yes            |
+| USB Type-C (debug serial port) | yes             | yes            |
+| HDMI Video | yes             | yes            |
+| HDMI Audio | not tested yet  | not tested yet |
+| MKSPI-TS32 TFT display | yes | yes            |
+| MKSPI-TS32 touch screen | not tested yet  | not tested yet |
+| Reser button | yes | yes |
+| WiFi dongles | yes | yes |
+| ADXL345 (SPI connectors) | not tested yet | not tested yet |      
+
+### Known Issues
+Edge, Jammy:
+* `irq 37: nobody cared` message in boot log and on boot screen
+* Works either HDMI out or MKS PI-TS32 display. No dual screen, no reconnection during runtime. Display must be connected before system start and cannot be switched after boot.
+* software reset and shutdown commands do not work. Need to reset board by reset button or via PSU off/on.
+
+
+Current, Jammy:
+* `irq 55: nobody cared` message in boot log
+* Works either HDMI out or MKS PI-TS32 display. No dual screen, no reconnection during runtime. Display must be connected before system start and cannot be switched after boot.
+
+
+## How to Build
+
+The new `mkspi` board was declared. Now has support only for `current` and `edge` kernels and Ubuntu Jammy OS (CLI and desktop editions). Build process is pretty usual for Armbain build.
+
+
+I would advice to read official documentation, however it's short version:
+
+1. Use Ubunut Jammy 22.04 OS (or VM). Ensure you have 15-40GB of free disk and 4-6GB RAM.
+2. Clone repo
+3. `cd armbian-mkspi`
+4. `./compile.sh` and follow instructions...
+  * ... or `./compile.sh BOARD=mkspi BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img`
+  * ... or  `./compile.sh BOARD=mkspi BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no DESKTOP_ENVIRONMENT=xfce DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base COMPRESS_OUTPUTIMAGE=sha,gpg,img`
+ 
+  * ... or `./compile.sh BOARD=mkspi BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img`
+  * ... or `./compile.sh BOARD=mkspi BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no DESKTOP_ENVIRONMENT=xfce DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base COMPRESS_OUTPUTIMAGE=sha,gpg,img`
+  * ... feel free to append  ` CREATE_PATCHES=yes` arg if you would like to change U-Boot or Kernel sources.
+5. Wait a 20-180 minutes (depends of your hardware, mostly disk system) and check `output\images\` directory
+
+
+
+## Some technical Details:
+Origina Image:
+```
+# PLEASE DO NOT EDIT THIS FILE
+BOARD=mkspi
+BOARD_NAME="mkspi"
+BOARDFAMILY=rockchip64
+BUILD_REPOSITORY_URL=https://github.com/armbian/build.git
+BUILD_REPOSITORY_COMMIT=ed589b248-dirty
+VERSION=22.05.0-trunk
+LINUXFAMILY=rockchip64
+ARCH=arm64
+IMAGE_TYPE=user-built
+BOARD_TYPE=conf
+INITRD_ARCH=arm64
+KERNEL_IMAGE_TYPE=Image
+BRANCH=edge
+/etc/armbian-release (END)
+```
+
+https://github.com/makerbase-mks/armbian-build repo contains random crap (half worked patches for legacy 4.4 Kernel and non full armbian integration)
+
+In generally it's not clear what was changed, however looks like MKS guys were not too creative and almost copy rockchip64/Renegade board. Patches include:
+1. Changes for `/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts` ( redeclaring a few pins, disabling some features and declaring new ones. mostly for MKSPI-TS32 screen)
+2. HDMI interface change, seems just to declare mode with 5:3 aspect ration
+3. "Patch" for `fbtft/fb_ili9341` driver. Basically redefining screen resolution.
+4. patches for SPI support code. 
+5. Changes to drm_edid (see `/drivers/gpu/drm/drm_edid.c` and `/drivers/gpu/drm/rockchip/inno_hdmi.c` files). However I have no idea what this about and how to apply this patches to new kernel sources.
+6. Kernel v4.4 config. However I am not sure how it's relevant to the current and edge branches.
+
+
+## See Also
+ - https://github.com/makerbase-mks/MKS-PI - MKS delivered image, official instructions and schematic. 
+ - https://github.com/makerbase-mks/armbian-build - kind of sources (state of Dec.23 - random unworked crap)
+
+
+
+
+
+# Original Armbian README.md
 <p align="center">
   <a href="#build-framework">
   <img src=".github/armbian-logo.png" alt="Armbian logo" width="144">

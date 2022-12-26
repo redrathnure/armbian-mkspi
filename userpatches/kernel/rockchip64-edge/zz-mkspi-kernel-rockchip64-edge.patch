@@ -134,7 +134,7 @@ index 02d9f1fba4f..f49485730ce 100644
 +		};
 +	};
 +	lcd {
-+		pinctrl_ili9341_cs: pinctrl_ili9341_cs {
++		pinctrl_ili9481_cs: pinctrl_ili9481_cs {
 +			rockchip,pins = <3 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
 +		};
 +	};
@@ -161,9 +161,9 @@ index 02d9f1fba4f..f49485730ce 100644
 +	cs-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>,<&gpio3 RK_PA7 GPIO_ACTIVE_LOW>,<&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
 +	
 +	spi_for_lcd@0 {
-+		compatible ="ilitek,ili9341";
++		compatible ="ilitek,ili9481";
 +		pinctrl-names ="default";
-+		pinctrl-0 = <&pinctrl_ili9341_cs>;	
++		pinctrl-0 = <&pinctrl_ili9481_cs>;	
 +		reg = <0>;
 +		spi-max-frequency = <24000000>;
 +		bgr;
@@ -263,64 +263,6 @@ index 3c65d3d7455..c42cefdc0d7 100644
  	{},
  };
  MODULE_DEVICE_TABLE(of, spidev_dt_ids);
-diff --git a/drivers/staging/fbtft/fb_ili9341.c b/drivers/staging/fbtft/fb_ili9341.c
-index 9ccd0823c3a..c5eb47fcba9 100644
---- a/drivers/staging/fbtft/fb_ili9341.c
-+++ b/drivers/staging/fbtft/fb_ili9341.c
-@@ -20,9 +20,9 @@
- #include "fbtft.h"
- 
- #define DRVNAME		"fb_ili9341"
--#define WIDTH		240
--#define HEIGHT		320
--#define TXBUFLEN	(4 * PAGE_SIZE)
-+#define WIDTH		320
-+#define HEIGHT		480
-+#define TXBUFLEN	0xfffe // 4 * PAGE_SIZE 
- #define DEFAULT_GAMMA	"1F 1A 18 0A 0F 06 45 87 32 0A 07 02 07 05 00\n" \
- 			"00 25 27 05 10 09 3A 78 4D 05 18 0D 38 3A 1F"
- 
-@@ -34,6 +34,32 @@ static int init_display(struct fbtft_par *par)
- 	write_reg(par, MIPI_DCS_SOFT_RESET);
- 	mdelay(5);
- 	write_reg(par, MIPI_DCS_SET_DISPLAY_OFF);
-+	
-+	/*these are for st7796*/
-+	/* --------------------------------------------------------- */
-+	
-+	write_reg(par, 0xf0, 0xc3);
-+	write_reg(par, 0xf0, 0x96);
-+	write_reg(par, 0x36, 0x28);
-+	write_reg(par, 0x3A, 0x55);
-+	write_reg(par, 0xB4, 0x01);
-+	write_reg(par, 0xB7, 0xc6);
-+	write_reg(par, 0xE8, 0x40, 0x8a, 0x00, 0x00, 0x29, 0x19, 0xa5, 0x33);
-+	write_reg(par, 0xc1, 0x06);
-+	write_reg(par, 0xc2, 0xa7);
-+	write_reg(par, 0xc5, 0x18);
-+	write_reg(par, 0xE0, 0xf0, 0x09, 0x0b, 0x06, 0x04, 0x15, 0x2f, 0x54, 0x42, 0x3c, 0x17, 0x14, 0x18, 0x1b);
-+	write_reg(par, 0xE1, 0xf0, 0x09, 0x0b, 0x06, 0x04, 0x03, 0x2d, 0x43, 0x42, 0x3b, 0x16, 0x14, 0x17, 0x1b);
-+	write_reg(par, 0xf0, 0x3c);
-+	write_reg(par, 0xf0, 0x69);
-+	write_reg(par, 0x11);
-+	mdelay(100);
-+	write_reg(par, 0x29);
-+	mdelay(20);
-+	
-+	
-+	/*below is for 9341*/
-+	#if 0
- 	/* --------------------------------------------------------- */
- 	write_reg(par, 0xCF, 0x00, 0x83, 0x30);
- 	write_reg(par, 0xED, 0x64, 0x03, 0x12, 0x81);
-@@ -61,6 +87,7 @@ static int init_display(struct fbtft_par *par)
- 	mdelay(100);
- 	write_reg(par, MIPI_DCS_SET_DISPLAY_ON);
- 	mdelay(20);
-+	#endif
- 
- 	return 0;
- }
 diff --git a/drivers/video/hdmi.c b/drivers/video/hdmi.c
 index 03c7f27dde4..8d68d34ce02 100644
 --- a/drivers/video/hdmi.c

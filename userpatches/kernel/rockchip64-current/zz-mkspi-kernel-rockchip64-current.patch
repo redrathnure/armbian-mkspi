@@ -261,8 +261,8 @@ index bf08071e9..b1186e35c 100644
  	{ .compatible = "armbian,spi-dev" },
 -	{ .compatible = "rohm,dh2228fv" },
 -	{ .compatible = "lineartechnology,ltc2488" },
-+	/*{ .compatible = "rohm,dh2228fv" },
-+	{ .compatible = "lineartechnology,ltc2488" },*/
++	{ .compatible = "rohm,dh2228fv" },
++	{ .compatible = "lineartechnology,ltc2488" },
 +	{ .compatible = "rockchip,spi_test_bus1_cs2" },
  	{ .compatible = "semtech,sx1301" },
  	{ .compatible = "lwn,bk4" },

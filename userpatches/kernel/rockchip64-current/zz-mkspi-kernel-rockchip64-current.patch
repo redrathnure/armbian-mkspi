@@ -267,30 +267,3 @@ index bf08071e9..b1186e35c 100644
  	{ .compatible = "semtech,sx1301" },
  	{ .compatible = "lwn,bk4" },
  	{ .compatible = "dh,dhcom-board" },
-
- 
-diff --git a/drivers/video/hdmi.c b/drivers/video/hdmi.c
-index 947be761d..334c7243c 100644
---- a/drivers/video/hdmi.c
-+++ b/drivers/video/hdmi.c
-@@ -1071,6 +1071,8 @@ hdmi_picture_aspect_get_name(enum hdmi_picture_aspect picture_aspect)
- 		return "64:27";
- 	case HDMI_PICTURE_ASPECT_256_135:
- 		return "256:135";
-+	case HDMI_PICTURE_ASPECT_5_3:
-+		return "5:3";
- 	case HDMI_PICTURE_ASPECT_RESERVED:
- 		return "Reserved";
- 	}
-diff --git a/include/linux/hdmi.h b/include/linux/hdmi.h
-index c8ec982ff..fbe3c1dbe 100644
---- a/include/linux/hdmi.h
-+++ b/include/linux/hdmi.h
-@@ -99,6 +99,7 @@ enum hdmi_picture_aspect {
- 	HDMI_PICTURE_ASPECT_16_9,
- 	HDMI_PICTURE_ASPECT_64_27,
- 	HDMI_PICTURE_ASPECT_256_135,
-+	HDMI_PICTURE_ASPECT_5_3,
- 	HDMI_PICTURE_ASPECT_RESERVED,
- };
- 

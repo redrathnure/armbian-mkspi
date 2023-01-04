@@ -46,7 +46,8 @@ If you know proper way how to orgonise these patches and right places in armbian
 | HDMI Audio | not tested yet  | not tested yet |
 | MKSPI-TS32 TFT display | yes | yes            |
 | MKSPI-TS32 touch screen | yes | yes |
-| Reser button | yes | yes |
+| Reset button | yes | yes |
+| Ethernet | yes | yes |
 | WiFi dongles | yes | yes |
 | ADXL345 (SPI connectors) | not tested yet | not tested yet |      
 

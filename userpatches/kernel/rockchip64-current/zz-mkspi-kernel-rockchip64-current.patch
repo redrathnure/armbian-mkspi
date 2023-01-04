@@ -1,5 +1,5 @@
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 5061f149d..d3bd38b00 100644
+index 5061f149d..e7551ad68 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 @@ -8,7 +8,7 @@
@@ -53,16 +53,20 @@ index 5061f149d..d3bd38b00 100644
  };
  
  &analog_sound {
-@@ -205,7 +201,7 @@ &gmac2io {
+@@ -205,7 +201,11 @@ &gmac2io {
  	snps,txpbl = <0x4>;
  	tx_delay = <0x24>;
  	rx_delay = <0x18>;
 -	status = "okay";
-+	status = "disable";
++	status = "disabled";
++};
++
++&gmac2phy {
++ 	status = "okay";
  };
  
  &gpu {
-@@ -340,19 +336,19 @@ regulator-state-mem {
+@@ -340,19 +340,19 @@ regulator-state-mem {
  };
  
  &i2s0 {
@@ -86,7 +90,7 @@ index 5061f149d..d3bd38b00 100644
  };
  
  &io_domains {
-@@ -361,22 +357,17 @@ &io_domains {
+@@ -361,22 +361,17 @@ &io_domains {
  	vccio1-supply = <&vcc_io>;
  	vccio2-supply = <&vcc18_emmc>;
  	vccio3-supply = <&vccio_sd>;
@@ -111,7 +115,7 @@ index 5061f149d..d3bd38b00 100644
  		};
  	};
  
-@@ -385,6 +376,31 @@ usb20_host_drv: usb20-host-drv {
+@@ -385,6 +380,31 @@ usb20_host_drv: usb20-host-drv {
  			rockchip,pins = <1 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
  		};
  	};
@@ -143,7 +147,7 @@ index 5061f149d..d3bd38b00 100644
  };
  
  &sdmmc {
-@@ -435,6 +451,70 @@ &u2phy_otg {
+@@ -435,6 +455,70 @@ &u2phy_otg {
  	status = "okay";
  };
  
@@ -252,17 +256,13 @@ index b721b6211..8586f00d0 100644
  
  	if (!of_property_read_u32(pdev->dev.of_node, "rx-sample-delay-ns",
 diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index bf08071e9..b1186e35c 100644
+index bf08071e9..baf742ac7 100644
 --- a/drivers/spi/spidev.c
 +++ b/drivers/spi/spidev.c
-@@ -690,8 +690,9 @@ MODULE_DEVICE_TABLE(spi, spidev_spi_ids);
- #ifdef CONFIG_OF
- static const struct of_device_id spidev_dt_ids[] = {
+@@ -692,6 +692,7 @@ static const struct of_device_id spidev_dt_ids[] = {
  	{ .compatible = "armbian,spi-dev" },
--	{ .compatible = "rohm,dh2228fv" },
--	{ .compatible = "lineartechnology,ltc2488" },
-+	{ .compatible = "rohm,dh2228fv" },
-+	{ .compatible = "lineartechnology,ltc2488" },
+ 	{ .compatible = "rohm,dh2228fv" },
+ 	{ .compatible = "lineartechnology,ltc2488" },
 +	{ .compatible = "rockchip,spi_test_bus1_cs2" },
  	{ .compatible = "semtech,sx1301" },
  	{ .compatible = "lwn,bk4" },

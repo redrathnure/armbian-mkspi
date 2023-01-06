@@ -1,5 +1,5 @@
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 5061f149d..cbdc93ee4 100644
+index 5061f149d..11667d5e2 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 @@ -8,7 +8,7 @@
@@ -40,7 +40,7 @@ index 5061f149d..cbdc93ee4 100644
  		pinctrl-names = "default";
  		pinctrl-0 = <&usb20_host_drv>;
  		regulator-name = "vcc_host1_5v";
-@@ -123,12 +125,6 @@ user_led: led-1 {
+@@ -123,26 +125,10 @@ user_led: led-1 {
  		};
  	};
  
@@ -50,10 +50,25 @@ index 5061f149d..cbdc93ee4 100644
 -		pinctrl-0 = <&ir_int>;
 -		pinctrl-names = "default";
 -	};
+-};
+-
+-&analog_sound {
+-	simple-audio-card,name = "TRS Jack";
+-	status = "okay";
+-};
+-
+-&codec {
+-	status = "okay";
  };
  
+-
  &analog_sound {
-@@ -205,7 +201,11 @@ &gmac2io {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &codec {
+@@ -205,7 +191,11 @@ &gmac2io {
  	snps,txpbl = <0x4>;
  	tx_delay = <0x24>;
  	rx_delay = <0x18>;
@@ -66,7 +81,7 @@ index 5061f149d..cbdc93ee4 100644
  };
  
  &gpu {
-@@ -340,19 +340,19 @@ regulator-state-mem {
+@@ -340,19 +330,19 @@ regulator-state-mem {
  };
  
  &i2s0 {
@@ -90,7 +105,7 @@ index 5061f149d..cbdc93ee4 100644
  };
  
  &io_domains {
-@@ -361,22 +361,17 @@ &io_domains {
+@@ -361,28 +351,48 @@ &io_domains {
  	vccio1-supply = <&vcc_io>;
  	vccio2-supply = <&vcc18_emmc>;
  	vccio3-supply = <&vccio_sd>;
@@ -115,10 +130,12 @@ index 5061f149d..cbdc93ee4 100644
  		};
  	};
  
-@@ -385,6 +380,31 @@ usb20_host_drv: usb20-host-drv {
- 			rockchip,pins = <1 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
- 		};
- 	};
+ 	usb2 {
+ 		usb20_host_drv: usb20-host-drv {
+-			rockchip,pins = <1 RK_PD2 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
 +
 +	sd {
 +		sdio_vcc_pin: sdio-vcc-pin {
@@ -142,12 +159,10 @@ index 5061f149d..cbdc93ee4 100644
 +	spi0_cs2 {
 +		pinctrl_spi0_cs2: pinctrl_spi0_cs2 {
 +			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
+ 		};
+ 	};
  };
- 
- &sdmmc {
-@@ -435,6 +455,69 @@ &u2phy_otg {
+@@ -435,6 +445,69 @@ &u2phy_otg {
  	status = "okay";
  };
  
@@ -242,10 +257,10 @@ index b721b6211..8586f00d0 100644
  
  	if (!of_property_read_u32(pdev->dev.of_node, "rx-sample-delay-ns",
 diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index bf08071e9..baf742ac7 100644
+index e0bd8fdfb..2041a0576 100644
 --- a/drivers/spi/spidev.c
 +++ b/drivers/spi/spidev.c
-@@ -692,6 +692,7 @@ static const struct of_device_id spidev_dt_ids[] = {
+@@ -703,6 +703,7 @@ static const struct of_device_id spidev_dt_ids[] = {
  	{ .compatible = "armbian,spi-dev" },
  	{ .compatible = "rohm,dh2228fv" },
  	{ .compatible = "lineartechnology,ltc2488" },

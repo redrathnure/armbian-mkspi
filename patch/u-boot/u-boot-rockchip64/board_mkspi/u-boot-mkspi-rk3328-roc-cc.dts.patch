@@ -1,5 +1,5 @@
 diff --git a/arch/arm/dts/rk3328-roc-cc.dts b/arch/arm/dts/rk3328-roc-cc.dts
-index aa22a0c2..9c374300 100644
+index aa22a0c2..59b2b692 100644
 --- a/arch/arm/dts/rk3328-roc-cc.dts
 +++ b/arch/arm/dts/rk3328-roc-cc.dts
 @@ -7,7 +7,7 @@
@@ -35,24 +35,18 @@ index aa22a0c2..9c374300 100644
  		pinctrl-names = "default";
  		pinctrl-0 = <&usb20_host_drv>;
  		regulator-name = "vcc_host1_5v";
-@@ -163,6 +165,16 @@
+@@ -163,6 +165,10 @@
  	snps,txpbl = <0x4>;
  	tx_delay = <0x24>;
  	rx_delay = <0x18>;
-+	status = "disable";
++	status = "disabled";
 +};
 +
 +&gmac2phy {
-+	phy-supply = <&vcc_phy>;
-+	clock_in_out = "output";
-+	assigned-clocks = <&cru SCLK_MAC2PHY_SRC>;
-+	assigned-clock-rate = <50000000>;
-+	assigned-clocks = <&cru SCLK_MAC2PHY>;
-+	assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
  	status = "okay";
  };
  
-@@ -301,7 +313,7 @@
+@@ -301,7 +307,7 @@
  	vccio1-supply = <&vcc_io>;
  	vccio2-supply = <&vcc18_emmc>;
  	vccio3-supply = <&vcc_sdio>;
@@ -61,7 +55,7 @@ index aa22a0c2..9c374300 100644
  	vccio5-supply = <&vcc_io>;
  	vccio6-supply = <&vcc_io>;
  	pmuio-supply = <&vcc_io>;
-@@ -310,13 +322,18 @@
+@@ -310,13 +316,18 @@
  &pinctrl {
  	pmic {
  		pmic_int_l: pmic-int-l {
@@ -82,7 +76,7 @@ index aa22a0c2..9c374300 100644
  		};
  	};
  };
-@@ -354,6 +371,10 @@
+@@ -354,6 +365,10 @@
  	status = "okay";
  };
  

@@ -1,5 +1,5 @@
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 5061f149d..e7551ad68 100644
+index 5061f149d..cbdc93ee4 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 @@ -8,7 +8,7 @@
@@ -147,21 +147,20 @@ index 5061f149d..e7551ad68 100644
  };
  
  &sdmmc {
-@@ -435,6 +455,70 @@ &u2phy_otg {
+@@ -435,6 +455,69 @@ &u2phy_otg {
  	status = "okay";
  };
  
 +&uart0 {
-+	pinctrl-names = "default";
 +	pinctrl-0 = <&uart0_xfer &uart0_cts>;
 + 	status = "okay";
 +};
 +
 +&spi0 {
-+	status = "okay";
 +	max-freq = <48000000>;
-+	dma-names = "tx", "rx";
 +	cs-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>,<&gpio3 RK_PA7 GPIO_ACTIVE_LOW>,<&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
++	pinctrl-0 = <&spi0m2_clk &spi0m2_tx &spi0m2_rx>;
++	status = "okay";
 +	
 +	spi_for_lcd@0 {
 +		compatible ="ilitek,ili9481";
@@ -170,13 +169,13 @@ index 5061f149d..e7551ad68 100644
 +		reg = <0>;
 +		spi-max-frequency = <24000000>;
 +		bgr;
-+            	fps = <20>;
-+            	rotate = <270>;
-+            	buswidth = <8>; 
++		fps = <20>;
++		rotate = <270>;
++		buswidth = <8>; 
 +		dc-gpios = <&gpio3 RK_PA6 GPIO_ACTIVE_HIGH>;  /* gpio3 A6 */
-+            	reset-gpios = <&gpio3 RK_PA4 GPIO_ACTIVE_LOW>; /* gpio3 A4 */
-+            	led-gpios = <&gpio3 RK_PA5 GPIO_ACTIVE_HIGH>;  /* gpio3 A5 */ 
-+	    	status = "okay";
++		reset-gpios = <&gpio3 RK_PA4 GPIO_ACTIVE_LOW>; /* gpio3 A4 */
++		led-gpios = <&gpio3 RK_PA5 GPIO_ACTIVE_HIGH>;  /* gpio3 A5 */ 
++		status = "okay";
 +	};
 +	
 +	spi_for_touch@1 {
@@ -190,9 +189,9 @@ index 5061f149d..e7551ad68 100644
 +		ti,y-max = /bits/ 16 <3919>;
 +		ti,x-plate-ohms = /bits/ 16 <40>;
 +		ti,pressure-max = /bits/ 16 <255>;
-+	/*	touchscreen-fuzz-x = <16>;
-+		touchscreen-fuzz-y = <16>;
-+		touchscreen-fuzz-pressure = <10>;*/
++		//touchscreen-fuzz-x = <16>;
++		//touchscreen-fuzz-y = <16>;
++		//touchscreen-fuzz-pressure = <10>;
 +		ti,swap-xy = <1>;
 +		touchscreen-inverted-y = <1>;
 +		interrupt-parent = <&gpio1>;
@@ -218,19 +217,6 @@ index 5061f149d..e7551ad68 100644
  &uart2 {
  	status = "okay";
  };
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 301c5ce6a..561186d70 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -461,7 +461,7 @@ spi0: spi@ff190000 {
- 		dmas = <&dmac 8>, <&dmac 9>;
- 		dma-names = "tx", "rx";
- 		pinctrl-names = "default";
--		pinctrl-0 = <&spi0m2_clk &spi0m2_tx &spi0m2_rx &spi0m2_cs0>;
-+		pinctrl-0 = <&spi0m2_clk &spi0m2_tx &spi0m2_rx>;
- 		status = "disabled";
- 	};
- 
 diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
 index 2643de034..3ceda7274 100644
 --- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c

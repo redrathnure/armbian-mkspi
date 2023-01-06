@@ -1,5 +1,5 @@
 diff --git a/arch/arm/dts/rk3328-roc-cc.dts b/arch/arm/dts/rk3328-roc-cc.dts
-index aa22a0c2..59b2b692 100644
+index aa22a0c2..2916d174 100644
 --- a/arch/arm/dts/rk3328-roc-cc.dts
 +++ b/arch/arm/dts/rk3328-roc-cc.dts
 @@ -7,7 +7,7 @@
@@ -35,6 +35,15 @@ index aa22a0c2..59b2b692 100644
  		pinctrl-names = "default";
  		pinctrl-0 = <&usb20_host_drv>;
  		regulator-name = "vcc_host1_5v";
+@@ -110,7 +112,7 @@
+ };
+ 
+ &analog_sound {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &codec {
 @@ -163,6 +165,10 @@
  	snps,txpbl = <0x4>;
  	tx_delay = <0x24>;
@@ -55,7 +64,7 @@ index aa22a0c2..59b2b692 100644
  	vccio5-supply = <&vcc_io>;
  	vccio6-supply = <&vcc_io>;
  	pmuio-supply = <&vcc_io>;
-@@ -310,13 +316,18 @@
+@@ -310,13 +316,19 @@
  &pinctrl {
  	pmic {
  		pmic_int_l: pmic-int-l {
@@ -70,13 +79,14 @@ index aa22a0c2..59b2b692 100644
 +			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
 +		};
 +	};
++
 +	sd {
 +		sdio_vcc_pin: sdio-vcc-pin {
 +			rockchip,pins = <2 RK_PC4 RK_FUNC_GPIO &pcfg_pull_up>;
  		};
  	};
  };
-@@ -354,6 +365,10 @@
+@@ -354,6 +366,10 @@
  	status = "okay";
  };
  

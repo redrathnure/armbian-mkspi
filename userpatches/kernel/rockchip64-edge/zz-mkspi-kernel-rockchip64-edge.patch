@@ -1,5 +1,5 @@
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 02d9f1fba4f..aafb3221aae 100644
+index 02d9f1fba4f..c4965b7d0aa 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 @@ -8,7 +8,7 @@
@@ -40,7 +40,7 @@ index 02d9f1fba4f..aafb3221aae 100644
  		pinctrl-names = "default";
  		pinctrl-0 = <&usb20_host_drv>;
  		regulator-name = "vcc_host1_5v";
-@@ -123,12 +125,6 @@ user_led: led-1 {
+@@ -123,26 +125,10 @@ user_led: led-1 {
  		};
  	};
  
@@ -50,10 +50,25 @@ index 02d9f1fba4f..aafb3221aae 100644
 -		pinctrl-0 = <&ir_int>;
 -		pinctrl-names = "default";
 -	};
+-};
+-
+-&analog_sound {
+-	simple-audio-card,name = "TRS Jack";
+-	status = "okay";
+-};
+-
+-&codec {
+-	status = "okay";
  };
  
+-
  &analog_sound {
-@@ -205,9 +201,20 @@ &gmac2io {
+-	status = "okay";
++	status = "disabled";
+ };
+ 
+ &codec {
+@@ -205,9 +191,15 @@ &gmac2io {
  	snps,txpbl = <0x4>;
  	tx_delay = <0x24>;
  	rx_delay = <0x18>;
@@ -62,11 +77,6 @@ index 02d9f1fba4f..aafb3221aae 100644
 +
 +
 +&gmac2phy {
-+	phy-supply = <&vcc_phy>;
-+	clock_in_out = "output";
-+	assigned-clock-rate = <50000000>;
-+	assigned-clocks = <&cru SCLK_MAC2PHY>;
-+	assigned-clock-parents =  <&cru SCLK_MAC2PHY_SRC>;
  	status = "okay";
  };
  
@@ -74,7 +84,7 @@ index 02d9f1fba4f..aafb3221aae 100644
  &gpu {
  	mali-supply = <&vdd_logic>;
  };
-@@ -340,19 +347,19 @@ regulator-state-mem {
+@@ -340,19 +332,19 @@ regulator-state-mem {
  };
  
  &i2s0 {
@@ -98,7 +108,7 @@ index 02d9f1fba4f..aafb3221aae 100644
  };
  
  &io_domains {
-@@ -361,28 +368,48 @@ &io_domains {
+@@ -361,28 +353,49 @@ &io_domains {
  	vccio1-supply = <&vcc_io>;
  	vccio2-supply = <&vcc18_emmc>;
  	vccio3-supply = <&vccio_sd>;
@@ -136,7 +146,6 @@ index 02d9f1fba4f..aafb3221aae 100644
 +		};
 +	};
 +
-+	
 +	touchscreen {
 +		pinctrl_tsc2046_pendown: pinctrl_tsc2046_pendown {
 +			rockchip,pins = <1 RK_PC6 RK_FUNC_GPIO &pcfg_pull_up>;
@@ -145,18 +154,20 @@ index 02d9f1fba4f..aafb3221aae 100644
 +			rockchip,pins = <3 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
 +		};
 +	};
++
 +	lcd {
 +		pinctrl_ili9481_cs: pinctrl_ili9481_cs {
 +			rockchip,pins = <3 RK_PB0 RK_FUNC_GPIO &pcfg_pull_up>;
 +		};
 +	};
++
 +	spi0_cs2 {
 +		pinctrl_spi0_cs2: pinctrl_spi0_cs2 {
 +			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_up>;
  		};
  	};
  };
-@@ -435,6 +462,68 @@ &u2phy_otg {
+@@ -435,6 +448,68 @@ &u2phy_otg {
  	status = "okay";
  };
  

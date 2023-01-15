@@ -49,7 +49,11 @@ If you know proper way how to orgonise these patches and right places in armbian
 | Reset button | yes | yes |
 | Ethernet | yes | yes |
 | WiFi dongles | yes | yes |
-| ADXL345 (SPI connectors) | not tested yet | not tested yet |      
+| ADXL345 (SPI0 connection) | yes | yes | 
+| UART0| not tested yet | not tested yet |
+| I2C| not tested yet | not tested yet |
+
+
 
 
 ### Known Issues
@@ -60,8 +64,44 @@ Edge, Jammy:
 
 
 Current, Jammy:
-* `irq 55: nobody cared` message in boot log
+* `irq 56: nobody cared` message in boot log
 * Works either HDMI out or MKS PI-TS32 display. No dual screen, no reconnection during runtime. Display must be connected before system start and cannot be switched after boot.
+
+
+### ADXL345/SPI Usage
+
+TLTR: Do not forget about [klipper_mcu installation](https://www.klipper3d.org/RPi_microcontroller.html).
+
+Full version:
+
+* Step 0: Ensure spidev device exists. e.g. `ls -al /dev/spi*` should show `/dev/spidev0.2` device file
+* Step 1: Install Klipper. E.g. 
+	```
+	cd ~
+	git clone https://github.com/th33xitus/kiauh.git
+	./kiauh/kiauh.sh
+	```
+	,  then 1, 1, 1 and so on.
+* Step 2: Build and install `klipper_mcu` service
+	```
+	# Stop klipper service
+	sudo systemctl stop klipper 
+
+	# Build and install klipper_mcu binary
+	cd ~/klipper/
+	make menuconfig
+	# In the menu, set "Microcontroller Architecture" to "Linux process," then save and exit.
+	make flash
+	sudo ln -s $PWD/scripts/klipper-mcu-start.sh /etc/init.d/klipper_mcu
+	sudo update-rc.d klipper_mcu defaults
+
+	# Start klipper_mcu and klipper
+	sudo systemctl start klipper_mcu klipper
+
+	# Ensure everything is up and running
+	sudo systemctl status klipper_mcu klipper
+	```
+* Step 3: [Add adxl345 configuration to your `printer.cfg`](https://github.com/makerbase-mks/MKS-PI#adxl345-connection-and-configuration)
 
 
 ## How to Build

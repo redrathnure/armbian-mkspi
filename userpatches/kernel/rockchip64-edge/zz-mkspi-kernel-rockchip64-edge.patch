@@ -236,15 +236,4 @@ index 02d9f1fba4f..c4965b7d0aa 100644
  &uart2 {
  	status = "okay";
  };
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-index 2643de0344d..3ceda7274fb 100644
---- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-@@ -293,6 +293,7 @@ struct inno_hdmi_phy_drv_data {
- static const struct pre_pll_config pre_pll_cfg_table[] = {
- 	{ 27000000,  27000000, 1,  90, 3, 2, 2, 10, 3, 3, 4, 0, 0},
- 	{ 27000000,  33750000, 1,  90, 1, 3, 3, 10, 3, 3, 4, 0, 0},
-+	{ 30240000,  30240000, 5, 504, 3, 2, 2, 20, 4, 2,  2, 0, 0},		// Kenneth
- 	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2, 2, 0, 0},
- 	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3, 4, 0, 0xE6AE6B},
- 	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3, 4, 0, 0},
+ 

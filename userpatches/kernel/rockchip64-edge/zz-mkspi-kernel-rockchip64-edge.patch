@@ -248,18 +248,6 @@ index 2643de0344d..3ceda7274fb 100644
  	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2, 2, 0, 0},
  	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3, 4, 0, 0xE6AE6B},
  	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3, 4, 0, 0},
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index 79242dc5272..f4ff78df864 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -820,6 +820,7 @@ static int rockchip_spi_probe(struct platform_device *pdev)
- 		goto err_disable_spiclk;
- 
- 	rs->dev = &pdev->dev;
-+	clk_set_rate(rs->spiclk, 48000000); //manually set to 48Mhz
- 	rs->freq = clk_get_rate(rs->spiclk);
- 
- 	if (!of_property_read_u32(pdev->dev.of_node, "rx-sample-delay-ns",
 diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
 index 22056740a73..fc98e93361f 100644
 --- a/drivers/spi/spidev.c

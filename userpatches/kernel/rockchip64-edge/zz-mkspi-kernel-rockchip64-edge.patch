@@ -249,10 +249,18 @@ index 2643de0344d..3ceda7274fb 100644
  	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3, 4, 0, 0xE6AE6B},
  	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3, 4, 0, 0},
 diff --git a/drivers/spi/spidev.c b/drivers/spi/spidev.c
-index 22056740a73..fc98e93361f 100644
+index 22056740a73..c310a3dc20c 100644
 --- a/drivers/spi/spidev.c
 +++ b/drivers/spi/spidev.c
-@@ -730,6 +730,7 @@ static const struct of_device_id spidev_dt_ids[] = {
+@@ -703,6 +703,7 @@ static const struct spi_device_id spidev_spi_ids[] = {
+ 	{ .name = "m53cpld" },
+ 	{ .name = "spi-petra" },
+ 	{ .name = "spi-authenta" },
++	{ .name = "spi_test_bus1_cs2" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(spi, spidev_spi_ids);
+@@ -730,6 +731,7 @@ static const struct of_device_id spidev_dt_ids[] = {
  	{ .compatible = "menlo,m53cpld", .data = &spidev_of_check },
  	{ .compatible = "cisco,spi-petra", .data = &spidev_of_check },
  	{ .compatible = "micron,spi-authenta", .data = &spidev_of_check },

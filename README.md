@@ -31,7 +31,7 @@ If you know proper way how to orgonise these patches and right places in armbian
   * USB ports, including USB 3 port
   * ADXL345 (SPI bus)
 * If you are interested in UART, I2C, EMMC etc features, feel free to step into development/testing or support by hardware.
-* Currently I am focusing only on Ubuntu LTS builds (`current` and `edge` kernels). Feel free to open PRs if you would need non LTS Ubuntu or Debian images.
+* ~~Currently I am focusing only on Ubuntu LTS builds (`current` and `edge` kernels). Feel free to open PRs if you would need non LTS Ubuntu or Debian images.~~ Currently Ubuntu LTS (tested) and Debian Bullseye (non tested) builds are supported.
 
 
 

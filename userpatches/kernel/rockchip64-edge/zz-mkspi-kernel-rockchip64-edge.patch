@@ -1,5 +1,5 @@
 diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
-index 02d9f1fba4f..c4965b7d0aa 100644
+index 17926efa341..251fb06cd6e 100755
 --- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 +++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
 @@ -8,7 +8,7 @@
@@ -11,19 +11,19 @@ index 02d9f1fba4f..c4965b7d0aa 100644
  	compatible = "firefly,roc-rk3328-cc", "rockchip,rk3328";
  
  	aliases {
-@@ -67,21 +67,23 @@ vcc_sd: sdmmc-regulator {
+@@ -76,21 +76,23 @@ vcc_sd: sdmmc-regulator {
  
- 	vccio_sd: sdmmcio-regulator {
+ 	vcc_sdio: sdmmcio-regulator {
  		compatible = "regulator-gpio";
 -		gpios = <&grf_gpio 0 GPIO_ACTIVE_HIGH>;
 -		states = <1800000 0x1>,
 -			 <3300000 0x0>;
 +		gpios = <&gpio2 RK_PC4 GPIO_ACTIVE_HIGH>;
 +		pinctrl-0 = <&sdio_vcc_pin>;
-+		pinctrl-names = "default";		
++		pinctrl-names = "default";
 +		states = <1800000 0x0>,
 +			 <3300000 0x1>;
- 		regulator-name = "vccio_sd";
+ 		regulator-name = "vcc_sdio";
  		regulator-type = "voltage";
  		regulator-min-microvolt = <1800000>;
  		regulator-max-microvolt = <3300000>;
@@ -40,7 +40,7 @@ index 02d9f1fba4f..c4965b7d0aa 100644
  		pinctrl-names = "default";
  		pinctrl-0 = <&usb20_host_drv>;
  		regulator-name = "vcc_host1_5v";
-@@ -123,26 +125,10 @@ user_led: led-1 {
+@@ -135,21 +137,18 @@ user_led: led-1 {
  		};
  	};
  
@@ -50,51 +50,34 @@ index 02d9f1fba4f..c4965b7d0aa 100644
 -		pinctrl-0 = <&ir_int>;
 -		pinctrl-names = "default";
 -	};
--};
 -
--&analog_sound {
--	simple-audio-card,name = "TRS Jack";
--	status = "okay";
--};
--
--&codec {
--	status = "okay";
  };
  
--
  &analog_sound {
 -	status = "okay";
 +	status = "disabled";
  };
  
  &codec {
-@@ -205,9 +191,15 @@ &gmac2io {
- 	snps,txpbl = <0x4>;
- 	tx_delay = <0x24>;
- 	rx_delay = <0x18>;
+-	status = "okay";
 +	status = "disabled";
 +};
 +
-+
 +&gmac2phy {
- 	status = "okay";
++ 	status = "okay";
  };
  
-+
+ &dfi {
+@@ -209,7 +208,7 @@ &gmac2io {
+ 	snps,txpbl = <0x4>;
+ 	tx_delay = <0x24>;
+ 	rx_delay = <0x18>;
+-	status = "okay";
++	status = "disabled";
+ };
+ 
  &gpu {
- 	mali-supply = <&vdd_logic>;
- };
-@@ -340,19 +332,19 @@ regulator-state-mem {
- };
- 
- &i2s0 {
--	status = "okay";
-+	status = "disabled";
- };
- 
- &i2s1 {
--	status = "okay";
-+	status = "disabled";
+@@ -338,11 +337,11 @@ regulator-state-mem {
  };
  
  &i2s0 {
@@ -108,18 +91,19 @@ index 02d9f1fba4f..c4965b7d0aa 100644
  };
  
  &io_domains {
-@@ -361,28 +353,49 @@ &io_domains {
+@@ -351,7 +350,7 @@ &io_domains {
  	vccio1-supply = <&vcc_io>;
  	vccio2-supply = <&vcc18_emmc>;
- 	vccio3-supply = <&vccio_sd>;
+ 	vccio3-supply = <&vcc_sdio>;
 -	vccio4-supply = <&vcc_18>;
 +	vccio4-supply = <&vcc_io>;
  	vccio5-supply = <&vcc_io>;
  	vccio6-supply = <&vcc_io>;
  	pmuio-supply = <&vcc_io>;
- };
+@@ -359,23 +358,44 @@ &io_domains {
  
  &pinctrl {
+ 
 -	ir {
 -		ir_int: ir-int {
 -			rockchip,pins = <2 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
@@ -143,8 +127,8 @@ index 02d9f1fba4f..c4965b7d0aa 100644
 +	sd {
 +		sdio_vcc_pin: sdio-vcc-pin {
 +			rockchip,pins = <2 RK_PC4 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
+ 		};
+ 	};
 +
 +	touchscreen {
 +		pinctrl_tsc2046_pendown: pinctrl_tsc2046_pendown {
@@ -164,10 +148,12 @@ index 02d9f1fba4f..c4965b7d0aa 100644
 +	spi0_cs2 {
 +		pinctrl_spi0_cs2: pinctrl_spi0_cs2 {
 +			rockchip,pins = <1 RK_PC2 RK_FUNC_GPIO &pcfg_pull_up>;
- 		};
- 	};
++ 		};
++ 	};
  };
-@@ -435,6 +448,68 @@ &u2phy_otg {
+ 
+ &sdmmc {
+@@ -424,10 +444,72 @@ &u2phy_otg {
  	status = "okay";
  };
  
@@ -176,6 +162,10 @@ index 02d9f1fba4f..c4965b7d0aa 100644
 + 	status = "okay";
 +};
 +
+ &uart2 {
+ 	status = "okay";
+ };
+ 
 +&spi0 {
 +	max-freq = <48000000>;
 +	cs-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_LOW>,<&gpio3 RK_PA7 GPIO_ACTIVE_LOW>,<&gpio1 RK_PC2 GPIO_ACTIVE_LOW>;
@@ -233,7 +223,6 @@ index 02d9f1fba4f..c4965b7d0aa 100644
 +	};
 +};
 +
- &uart2 {
+ &usb20_otg {
+ 	dr_mode = "host";
  	status = "okay";
- };
- 

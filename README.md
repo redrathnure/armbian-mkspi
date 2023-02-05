@@ -60,7 +60,6 @@ If you know proper way how to orgonise these patches and right places in armbian
 Edge, Jammy:
 * `irq 37: nobody cared` message in boot log and on boot screen
 * Works either HDMI out or MKS PI-TS32 display. No dual screen, no reconnection during runtime. Display must be connected before system start and cannot be switched after boot.
-* software reset and shutdown commands do not work. Need to reset board by reset button or via PSU off/on.
 
 
 Current, Jammy:

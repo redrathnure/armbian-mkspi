@@ -83,22 +83,26 @@ Full version:
 	,  then 1, 1, 1 and so on.
 * Step 2: Build and install `klipper_mcu` service
 	```
-	# Stop klipper service
-	sudo systemctl stop klipper 
-
 	# Build and install klipper_mcu binary
 	cd ~/klipper/
-	make menuconfig
+	
 	# In the menu, set "Microcontroller Architecture" to "Linux process," then save and exit.
+	make menuconfig
+	
+	# Preapre klipper-mcu service 
+	sudo ln -s $PWD/scripts/klipper-mcu.service /etc/systemd/system/
+	sudo systemctl daemon-reload
+	sudo systemctl enable klipper-mcu.service
+
+	# Stop klipper service and install klipper-mcu binary file
+	sudo service klipper stop
 	make flash
-	sudo ln -s $PWD/scripts/klipper-mcu-start.sh /etc/init.d/klipper_mcu
-	sudo update-rc.d klipper_mcu defaults
 
 	# Start klipper_mcu and klipper
-	sudo systemctl start klipper_mcu klipper
-
+	sudo systemctl start klipper-mcu klipper-mcu
+	
 	# Ensure everything is up and running
-	sudo systemctl status klipper_mcu klipper
+	sudo systemctl status klipper-mcu klipper
 	```
 * Step 3: [Add adxl345 configuration to your `printer.cfg`](https://github.com/makerbase-mks/MKS-PI#adxl345-connection-and-configuration)
 

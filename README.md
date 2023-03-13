@@ -26,7 +26,7 @@ Please note:
 If you know proper way how to orgonise these patches and right places in armbian sources for them, you are welcome to discussions or just open PRs.
 * I do not have access to full MKS PI set and cannot test all features. Main goal is to have worked following component:
   * booting from micro SD
-  * MKSPI-TS32 TFT display (better with working touch screen :) )
+  * MKSPI-TS35 TFT display (better with working touch screen :) )
   * HDMI output
   * USB ports, including USB 3 port
   * ADXL345 (SPI bus)
@@ -44,8 +44,8 @@ If you know proper way how to orgonise these patches and right places in armbian
 | USB Type-C (debug serial port) | yes             | yes            |
 | HDMI Video | yes             | yes            |
 | HDMI Audio | not tested yet  | not tested yet |
-| MKSPI-TS32 TFT display | yes | yes            |
-| MKSPI-TS32 touch screen | yes | yes |
+| MKSPI-TS35 TFT display | yes | yes            |
+| MKSPI-TS35 touch screen | yes | yes |
 | Reset button | yes | yes |
 | Ethernet | yes | yes |
 | WiFi dongles | yes | yes |
@@ -59,12 +59,12 @@ If you know proper way how to orgonise these patches and right places in armbian
 ### Known Issues
 Edge, Jammy:
 * `irq 37: nobody cared` message in boot log and on boot screen
-* Works either HDMI out or MKS PI-TS32 display. No dual screen, no reconnection during runtime. Display must be connected before system start and cannot be switched after boot.
+* Works either HDMI out or MKS PI-TS35 display. No dual screen, no reconnection during runtime. Display must be connected before system start and cannot be switched after boot.
 
 
 Current, Jammy:
 * `irq 56: nobody cared` message in boot log
-* Works either HDMI out or MKS PI-TS32 display. No dual screen, no reconnection during runtime. Display must be connected before system start and cannot be switched after boot.
+* Works either HDMI out or MKS PI-TS35 display. No dual screen, no reconnection during runtime. Display must be connected before system start and cannot be switched after boot.
 
 
 ### ADXL345/SPI Usage
@@ -151,7 +151,7 @@ BRANCH=edge
 https://github.com/makerbase-mks/armbian-build repo contains random crap (half worked patches for legacy 4.4 Kernel and non full armbian integration)
 
 In generally it's not clear what was changed, however looks like MKS guys were not too creative and almost copy rockchip64/Renegade board. Patches include:
-1. Changes for `/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts` ( redeclaring a few pins, disabling some features and declaring new ones. mostly for MKSPI-TS32 screen)
+1. Changes for `/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts` ( redeclaring a few pins, disabling some features and declaring new ones. mostly for MKSPI-TS35 screen)
 2. HDMI interface change, seems just to declare mode with 5:3 aspect ration
 3. "Patch" for `fbtft/fb_ili9341` driver. Basically redefining screen resolution.
 4. patches for SPI support code. 

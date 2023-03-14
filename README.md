@@ -50,7 +50,7 @@ If you know proper way how to orgonise these patches and right places in armbian
 | Ethernet | yes | yes |
 | WiFi dongles | yes | yes |
 | ADXL345 (SPI0 connection) | yes | yes | 
-| UART0| not tested yet | not tested yet |
+| UART0| yes | yes |
 | I2C| not tested yet | not tested yet |
 
 

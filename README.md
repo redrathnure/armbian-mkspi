@@ -152,12 +152,12 @@ I would advice to read official documentation, however it's short version:
 1. Use Ubunut Jammy 22.04 OS (or VM). Ensure you have 15-40GB of free disk and 4-6GB RAM.
 2. Clone repo
 3. `cd armbian-mkspi`
-4. `./compile.sh` and follow instructions...
-  * ... or `./compile.sh BOARD=mkspi BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img`
-  * ... or  `./compile.sh BOARD=mkspi BRANCH=current RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no DESKTOP_ENVIRONMENT=xfce DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base COMPRESS_OUTPUTIMAGE=sha,gpg,img`
+4. `./compile.sh` and follow instructions... Please do not forget to freeze kernel updates via `sudo armbian-config` right after the first login. Or use `BSPFREEZE=yes` CLI arg during image build.
+  * ... or `./compile.sh BOARD=mkspi BRANCH=current RELEASE=jammy BSPFREEZE=yes BUILD_MINIMAL=no BUILD_DESKTOP=no BUILD_ONLY=default KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img`
+  * ... or `./compile.sh BOARD=mkspi BRANCH=current RELEASE=jammy BSPFREEZE=yes BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no DESKTOP_ENVIRONMENT=xfce DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base COMPRESS_OUTPUTIMAGE=sha,gpg,img`
  
-  * ... or `./compile.sh BOARD=mkspi BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img`
-  * ... or `./compile.sh BOARD=mkspi BRANCH=edge RELEASE=jammy BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no DESKTOP_ENVIRONMENT=xfce DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base COMPRESS_OUTPUTIMAGE=sha,gpg,img`
+  * ... or `./compile.sh BOARD=mkspi BRANCH=edge RELEASE=jammy BSPFREEZE=yes BUILD_MINIMAL=no BUILD_DESKTOP=no BUILD_ONLY=default KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img`
+  * ... or `./compile.sh BOARD=mkspi BRANCH=edge RELEASE=jammy BSPFREEZE=yes BUILD_MINIMAL=no BUILD_DESKTOP=yes KERNEL_CONFIGURE=no DESKTOP_ENVIRONMENT=xfce DESKTOP_ENVIRONMENT_CONFIG_NAME=config_base COMPRESS_OUTPUTIMAGE=sha,gpg,img`
   * ... feel free to append  ` CREATE_PATCHES=yes` arg if you would like to change U-Boot or Kernel sources.
 5. Wait a 20-180 minutes (depends of your hardware, mostly disk system) and check `output\images\` directory
 

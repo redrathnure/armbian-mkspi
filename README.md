@@ -111,6 +111,37 @@ Full version:
 
 Please double check kernel packages were freezed before running `apt update` command. E.g. run `sudo armbian-config` and check `System` -> `Freeze - Disable Armbian kernel updates` item.
 
+
+### How to Rotate Screen
+
+Sometimes you need to rotate the image on the screen, for example, when upgrading Flying Bear Ghost 5 printer. To do this you need to change value for `rotate` parameter under `spi_for_lcd@0` section in `/boot/dtb/rockchip/rk3328-roc-cc.dtb` file. Following commands may be used to perform this configuration:
+```
+# Backup
+sudo cp /boot/dtb/rockchip/rk3328-roc-cc.dtb /boot/dtb/rockchip/rk3328-roc-cc.dtb.$(date +"%Y%m%d_%H%M%S").bak
+# Unpack DTB file
+sudo dtc -I dtb -O dts -o rk3328-roc-cc.dts /boot/dtb/rockchip/rk3328-roc-cc.dtb
+#Make a copy to work with
+sudo cp rk3328-roc-cc.dts rk3328-roc-cc-rotated.dts
+
+# Find `rotate = <SOME_VALUE>` and change to `rotate = <NEW_VALUE>`, where NEW_VALUE is a rotation angle, e.g. `rotate = <90>` or `rotate = 270>`
+nano rk3328-roc-cc-rotated.dts
+
+# Or sed -i -e "s/<0x10e>/<90>/g" rk3328-roc-cc-rotated.dts
+
+# Double check
+less rk3328-roc-cc-rotated.dts | grep rotate
+
+# Pack DTS to DTB
+dtc -I dts -O dtb -o rk3328-roc-cc-rotated.dtb rk3328-roc-cc-rotated.dts
+
+# Update rk3328-roc-cc.dtb with new version
+sudo cp rk3328-roc-cc-rotated.dtb /boot/dtb/rockchip/rk3328-roc-cc.dtb
+
+# Reboot
+sudo reboot
+```
+
+
 ## How to Build
 
 The new `mkspi` board was declared. Now has support only for `current` and `edge` kernels and Ubuntu Jammy OS (CLI and desktop editions). Build process is pretty usual for Armbain build.

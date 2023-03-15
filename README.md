@@ -114,7 +114,12 @@ Please double check kernel packages were freezed before running `apt update` com
 
 ### How to Rotate Screen
 
-Sometimes you need to rotate the image on the screen, for example, when upgrading Flying Bear Ghost 5 printer. To do this you need to change value for `rotate` parameter under `spi_for_lcd@0` section in `/boot/dtb/rockchip/rk3328-roc-cc.dtb` file. Following commands may be used to perform this configuration:
+Sometimes you need to rotate the image on the screen, for example, when upgrading Flying Bear Ghost 5 printer. To do this you need to change value for `rotate` parameter under `spi_for_lcd@0` section (configuration for the display) and use `touchscreen-inverted-x = <0x01>` and/or `touchscreen-inverted-y = <0x01>` parameters for `spi_for_touch@1` section (configuration for touchscreen) in `/boot/dtb/rockchip/rk3328-roc-cc.dtb` file. Please note, value for `touchscreen-inverted-x = <0x01>` or `touchscreen-inverted-y = <0x01>` does *not* affect anything. To disable e.g. y-inversion, whole parameter should be commented out (`# touchscreen-inverted-y = <0x01>;`). There are few examples:
+
+* 270° (default mode) - `rotate = <270>;` (or `rotate = <0x10e>;` and `touchscreen-inverted-y = <0x01>`
+* 90° (flipped horizontally) - `rotate = <90>;` and `touchscreen-inverted-x = <0x01>`
+
+Following commands may be used to perform this configuration:
 ```
 # Backup
 sudo cp /boot/dtb/rockchip/rk3328-roc-cc.dtb /boot/dtb/rockchip/rk3328-roc-cc.dtb.$(date +"%Y%m%d_%H%M%S").bak
@@ -123,13 +128,16 @@ sudo dtc -I dtb -O dts -o rk3328-roc-cc.dts /boot/dtb/rockchip/rk3328-roc-cc.dtb
 #Make a copy to work with
 sudo cp rk3328-roc-cc.dts rk3328-roc-cc-rotated.dts
 
-# Find `rotate = <SOME_VALUE>` and change to `rotate = <NEW_VALUE>`, where NEW_VALUE is a rotation angle, e.g. `rotate = <90>` or `rotate = 270>`
+# Find `rotate = <SOME_VALUE>` and change to `rotate = <NEW_VALUE>`, where NEW_VALUE is a rotation angle, e.g. `rotate = <90>` or `rotate = <270>`
+# Then find `touchscreen-inverted-y` attribute and add or replace `touchscreen-inverted-x` one
 nano rk3328-roc-cc-rotated.dts
 
 # Or sed -i -e "s/<0x10e>/<90>/g" rk3328-roc-cc-rotated.dts
+# and sed -i -e "s/touchscreen-inverted-y/touchscreen-inverted-x/g" rk3328-roc-cc-rotated.dts
 
 # Double check
 less rk3328-roc-cc-rotated.dts | grep rotate
+less rk3328-roc-cc-rotated.dts | grep touchscreen-inverted
 
 # Pack DTS to DTB
 dtc -I dts -O dtb -o rk3328-roc-cc-rotated.dtb rk3328-roc-cc-rotated.dts

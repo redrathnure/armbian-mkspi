@@ -34,37 +34,12 @@ If you know proper way how to orgonise these patches and right places in armbian
 * ~~Currently I am focusing only on Ubuntu LTS builds (`current` and `edge` kernels). Feel free to open PRs if you would need non LTS Ubuntu or Debian images.~~ Currently Ubuntu LTS (tested) and Debian Bullseye (non tested) builds are supported.
 
 
-
 ## Current status
 
-| Feature | Current (5.15) | Edge (6.1) |
-|:--|:--|:--|
-| USB 2 | yes             | yes            |
-| USB 3 | yes             | yes            |
-| USB Type-C (debug serial port) | yes             | yes            |
-| HDMI Video | yes             | yes            |
-| HDMI Audio | not tested yet  | not tested yet |
-| MKSPI-TS35 TFT display | yes | yes            |
-| MKSPI-TS35 touch screen | yes | yes |
-| Reset button | yes | yes |
-| Ethernet | yes | yes |
-| WiFi dongles | yes | yes |
-| ADXL345 (SPI0 connection) | yes | yes | 
-| UART0| yes | yes |
-| I2C| not tested yet | not tested yet |
+Images should be ready for a daily usage. Everything seem to be workes, however please pay attantion:
 
-
-
-
-### Known Issues
-Edge, Jammy:
-* `irq 37: nobody cared` message in boot log and on boot screen
-* Works either HDMI out or MKS PI-TS35 display. No dual screen, no reconnection during runtime. Display must be connected before system start and cannot be switched after boot.
-
-
-Current, Jammy:
-* `irq 56: nobody cared` message in boot log
-* Works either HDMI out or MKS PI-TS35 display. No dual screen, no reconnection during runtime. Display must be connected before system start and cannot be switched after boot.
+1. Only Ubuntu builds are actively tested (use Debian ones for your own risk)
+2. Some bugs may appear from time to time. Especially it related to edge builds (based on non stable 6.x kernel). Please check [release page](https://github.com/redrathnure/armbian-mkspi/releases) for more details.
 
 
 ### ADXL345/SPI Usage

@@ -33,6 +33,7 @@ fonts-nanum
 fonts-opensymbol
 fonts-stix
 fonts-symbola
+fonts-ubuntu
 fonts-ubuntu-console
 foomatic-db-compressed-ppds
 gdebi
@@ -162,4 +163,5 @@ xorg-docs-core
 xscreensaver
 xserver-xorg
 xserver-xorg-video-fbdev
+xauth
 xwallpaper

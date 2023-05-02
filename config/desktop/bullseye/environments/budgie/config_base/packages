@@ -56,6 +56,7 @@ evince-common
 fontconfig
 fontconfig-config
 fonts-noto-mono
+fonts-ubuntu
 fonts-ubuntu-font-family-console
 foomatic-db-compressed-ppds
 gdebi
@@ -167,5 +168,6 @@ xorg-docs-core
 xscreensaver
 xserver-xorg
 xserver-xorg-video-fbdev
+xauth
 xwallpaper
 

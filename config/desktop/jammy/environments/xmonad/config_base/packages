@@ -37,6 +37,7 @@ fonts-nanum
 fonts-opensymbol
 fonts-stix
 fonts-symbola
+fonts-ubuntu
 fonts-ubuntu-console
 foomatic-db-compressed-ppds
 ghostscript-x
@@ -142,6 +143,7 @@ xmobar
 xmonad
 xscreensaver
 xserver-xorg-video-fbdev
+xauth
 xtitle
 xttitle
 xwallpaper

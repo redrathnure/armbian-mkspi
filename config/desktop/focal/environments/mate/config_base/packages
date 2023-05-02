@@ -33,6 +33,7 @@ fonts-nanum
 fonts-opensymbol
 fonts-stix
 fonts-symbola
+fonts-ubuntu
 fonts-ubuntu-font-family-console
 foomatic-db-compressed-ppds
 gdebi
@@ -218,6 +219,7 @@ xsensors
 xserver-common
 xserver-xorg
 xserver-xorg-video-fbdev
+xauth
 xwayland
 yelp
 yelp-xsl

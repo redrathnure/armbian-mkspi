@@ -109,9 +109,11 @@ xfonts-100dpi
 xfonts-75dpi
 xfonts-base
 xfonts-scalable
+fonts-ubuntu
 xorg-docs
 xorg-docs-core
 xscreensaver
 xserver-xorg
 xserver-xorg-video-fbdev
+xauth
 

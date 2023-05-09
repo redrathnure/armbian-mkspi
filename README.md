@@ -1,6 +1,6 @@
-# Unofficial Armbian build for [Makerbase MKS PI board](https://github.com/makerbase-mks/MKS-PI). 
+# Unofficial Armbian build for Makerbase [MKS PI](https://github.com/makerbase-mks/MKS-PI) and [MKS SKIPR](https://github.com/makerbase-mks/MKS-SKIPR) boards
 
-TLTR: Unofficial support of Makerbase MKS PI board. Contains `mkspi` board declaration and related kernel and u-boot patches.  
+TLTR: Unofficial support of Makerbase MKS PI and MKS SKIPR boards. Contains `mkspi` board declaration and related kernel and u-boot patches.  
 Please note, result Armbian image is not full replacement for mks distributed image. You have to do yourself all OS configuration and and Klipper components installation.  
 
 **WIP, absolutely no guarantees, you do everything at your own risk.**  

@@ -1,76 +1,39 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Igor Pecovnik <igor.pecovnik@****l.com>
-Date: Fri, 12 May 2023 22:30:14 +0000
-Subject: Patching kernel rockchip64 files drivers/tty/serial/8250/8250_dma.c
-
-Signed-off-by: Igor Pecovnik <igor.pecovnik@****l.com>
+From: Maxim Medvedev <redrathnure@gmail.com>
+Date: Sun, 2 Jul 2023 20:12:41 +0000
+Subject: partial rollback of 8250 DMA patch
 ---
- drivers/tty/serial/8250/8250_dma.c | 26 ++--------
- 1 file changed, 3 insertions(+), 23 deletions(-)
+ drivers/tty/serial/8250/8250_dma.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/tty/serial/8250/8250_dma.c b/drivers/tty/serial/8250/8250_dma.c
-index ec3cd7232..1bdc8d643 100644
+index a442f0dfd..9634cf537 100644
 --- a/drivers/tty/serial/8250/8250_dma.c
 +++ b/drivers/tty/serial/8250/8250_dma.c
-@@ -44,43 +44,23 @@ static void __dma_rx_complete(void *param)
- {
- 	struct uart_8250_port	*p = param;
- 	struct uart_8250_dma	*dma = p->dma;
- 	struct tty_port		*tty_port = &p->port.state->port;
- 	struct dma_tx_state	state;
--	enum dma_status		dma_status;
- 	int			count;
- 
--	/*
--	 * New DMA Rx can be started during the completion handler before it
--	 * could acquire port's lock and it might still be ongoing. Don't to
--	 * anything in such case.
--	 */
--	dma_status = dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+@@ -50,19 +50,20 @@ static void __dma_rx_complete(void *param)
+ 	/*
+ 	 * New DMA Rx can be started during the completion handler before it
+ 	 * could acquire port's lock and it might still be ongoing. Don't to
+ 	 * anything in such case.
+ 	 */
++	dma->rx_running = 0; // UART0 fix
+ 	dma_status = dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
 -	if (dma_status == DMA_IN_PROGRESS)
 -		return;
-+	dma->rx_running = 0;
-+	dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
++	// UART0 fix - if (dma_status == DMA_IN_PROGRESS)
++	// UART0 fix - 	return;
  
  	count = dma->rx_size - state.residue;
  
  	tty_insert_flip_string(tty_port, dma->rx_buf, count);
  	p->port.icount.rx += count;
 -	dma->rx_running = 0;
++	// UART0 fix - dma->rx_running = 0;
  
  	tty_flip_buffer_push(tty_port);
  }
  
--static void dma_rx_complete(void *param)
--{
--	struct uart_8250_port *p = param;
--	struct uart_8250_dma *dma = p->dma;
--	unsigned long flags;
--
--	spin_lock_irqsave(&p->port.lock, flags);
--	if (dma->rx_running)
--		__dma_rx_complete(p);
--	spin_unlock_irqrestore(&p->port.lock, flags);
--}
--
- int serial8250_tx_dma(struct uart_8250_port *p)
- {
- 	struct uart_8250_dma		*dma = p->dma;
- 	struct circ_buf			*xmit = &p->port.state->xmit;
- 	struct dma_async_tx_descriptor	*desc;
-@@ -152,11 +132,11 @@ int serial8250_rx_dma(struct uart_8250_port *p)
- 					   DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
- 	if (!desc)
- 		return -EBUSY;
- 
- 	dma->rx_running = 1;
--	desc->callback = dma_rx_complete;
-+	desc->callback = __dma_rx_complete;
- 	desc->callback_param = p;
- 
- 	dma->rx_cookie = dmaengine_submit(desc);
- 
- 	dma_async_issue_pending(dma->rxchan);
+ static void dma_rx_complete(void *param)
 -- 
 Created with Armbian build tools https://github.com/armbian/build
 

@@ -1,6 +1,6 @@
-# Unofficial Armbian build for Makerbase [MKS PI](https://github.com/makerbase-mks/MKS-PI) and [MKS SKIPR](https://github.com/makerbase-mks/MKS-SKIPR) boards
+# Unofficial Armbian build for Makerbase [MKS PI](https://github.com/makerbase-mks/MKS-PI) and [MKS SKIPR](https://github.com/makerbase-mks/MKS-SKIPR) and few more boards
 
-TLTR: Unofficial support of Makerbase MKS PI and MKS SKIPR boards. Contains `mkspi` board declaration and related kernel and u-boot patches.  
+TLTR: Unofficial support of Makerbase MKS PI and MKS SKIPR and other boards. Contains `mkspi` board declaration and related kernel and u-boot patches.  
 Please note, result Armbian image is not full replacement for mks distributed image. You have to do yourself all OS configuration and and Klipper components installation.  
 
 **WIP, absolutely no guarantees, you do everything at your own risk.**  
@@ -36,10 +36,19 @@ If you know proper way how to orgonise these patches and right places in armbian
 
 ## Current status
 
+Supported boards:
+* [MKS PI](https://github.com/makerbase-mks/MKS-PI) - fully supported
+* [MKS SKIPR](https://github.com/makerbase-mks/MKS-SKIPR) - fully supported
+* QIDI X-4 and X-6 Mainboards (made by MKS for X-Plus 3 and X-Max 3) - partially supported. See [FreeQIDI](https://openqidi.com/books/build-entire-operating-system-and-klipper-from-scratch/page/freeqidi) and https://github.com/redrathnure/armbian-mkspi/issues/21 for more details.
+
+MKS IPS50 LCD - works starting from `0.3.1-24.2.0-trunk` version.
+
+A `build-essential` and kernel header packages are preinstalled starting from `0.3.2-24.2.0-trunk` version. It should simplify Klipper installation and building custom kernel modules (e.g. WIFI modules like [RTL8188GU (RTL8710B)](https://github.com/McMCCRU/rtl8188gu) one).
+
 Images should be ready for a daily usage. Everything seem to be workes, however please pay attantion:
 
 1. Only Ubuntu builds are actively tested (use Debian ones for your own risk)
-2. Some bugs may appear from time to time. Especially it related to edge builds (based on non stable 6.x kernel). Please check [release page](https://github.com/redrathnure/armbian-mkspi/releases) for more details.
+2. Some bugs may appear from time to time. Especially it related to edge builds (based on edge 6.x kernel). Please check [release page](https://github.com/redrathnure/armbian-mkspi/releases) for more details.
 
 
 ### ADXL345/SPI Usage

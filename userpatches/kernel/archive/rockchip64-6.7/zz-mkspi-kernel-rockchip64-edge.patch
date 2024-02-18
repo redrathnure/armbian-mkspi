@@ -236,9 +236,9 @@ index c5ecfc3e5..1779a698a 100755
 +		ti,swap-xy = <1>;
 +		touchscreen-inverted-y = <1>;
 +		interrupt-parent = <&gpio1>;
-+		interrupts = <22 0>;
++		interrupts = <RK_PC6 GPIO_ACTIVE_LOW>;
 +		spi-max-frequency = <2000000>;
-+		pendown-gpio = <&gpio1 RK_PC6 0>;
++		pendown-gpio = <&gpio1 RK_PC6 GPIO_ACTIVE_LOW>;
 +		vcc-supply = <&vcc_io>;
 +		wakeup-source;
 +		status = "okay";

@@ -29,11 +29,6 @@ case $BRANCH in
 		declare -g KERNEL_MAJOR_MINOR="6.6"
 		declare -g LINUXFAMILY=rockchip64
 		declare -g LINUXCONFIG='linux-rockchip64-'$BRANCH
-		
-		if [[ "${BOARD_NAME}" == "mkspi" ]]; then
-			declare -g KERNEL_MAJOR_MINOR="6.1"
-		fi
-
 		;;
 
 	edge)

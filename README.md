@@ -30,7 +30,8 @@ If you know proper way how to orgonise these patches and right places in armbian
   * HDMI output
   * USB ports, including USB 3 port
   * ADXL345 (SPI bus)
-* If you are interested in UART, I2C, EMMC etc features, feel free to step into development/testing or support by hardware.
+  * CAN bus for SKIPR board
+* If you are interested in any additional features, feel free to step into development? testing or support me by hardware.
 * ~~Currently I am focusing only on Ubuntu LTS builds (`current` and `edge` kernels). Feel free to open PRs if you would need non LTS Ubuntu or Debian images.~~ Currently Ubuntu LTS (tested) and Debian Bullseye (non tested) builds are supported.
 
 
@@ -49,6 +50,7 @@ Images should be ready for a daily usage. Everything seem to be workes, however 
 
 1. Only Ubuntu builds are actively tested (use Debian ones for your own risk)
 2. Some bugs may appear from time to time. Especially it related to edge builds (based on edge 6.x kernel). Please check [release page](https://github.com/redrathnure/armbian-mkspi/releases) for more details.
+3. Please double check a [How to Configure CAN Bus](#how-to-configure-can-bus) section if you use [BTT EBB36](https://github.com/bigtreetech/EBB) or similar CAN toolhead
 
 
 ### ADXL345/SPI Usage
@@ -132,6 +134,43 @@ sudo cp rk3328-roc-cc-rotated.dtb /boot/dtb/rockchip/rk3328-roc-cc.dtb
 # Reboot
 sudo reboot
 ```
+
+
+### How to Configure CAN Bus
+
+There are two non obvious points which you should be aware to successfully configure CAN bus:
+
+1. MKS SKIPR board must be connected via USB (UART connection does not work for CAN bridge mode)
+2. By default latest images/Ubuntu distros do not have `ifconfig` command out of the box, so [Klipper documentation -- USB to CAN bus bridge mode](https://www.klipper3d.org/CANBUS.html#usb-to-can-bus-bridge-mode) will not properly work.
+
+Steps to configure CAN bus:
+
+1. (For SKIPR board) hook MCU via USB cable ("USB to CAN bus bridge" is not supported for UART connection type).
+2. (For SKIPR board) [compile Klipper firmware](https://klipper.discourse.group/t/mks-skipr-can-bus/5377/16) and flash MCU. Please specify bitrate/speed which will be used for toolhead. USuallu 500 000 or 1 000 000.
+3. Configure `can0` interface on MKSPI: 
+   ```
+    cat <<-'EOF' | sudo tee -a /etc/network/interfaces.d/can0
+	allow-hotplug can0
+	iface can0 can static
+		bitrate 1000000                                       # Ensure it's the same as selected for MCU firmware.
+		# up ifconfig $IFACE txqueuelen 128                   # It will not work because no ifconfig installed by default...
+		up ip link set $IFACE txqueuelen 128                  # ... please use this version instead. 
+		#up ip link set $IFACE txqueuelen 1024 restart-ms 200 # Bit more aggressive configuration
+
+	EOF
+   ```   
+4. Reboot. Yes, it's important! 
+5. Hook a toolhead board, find connected devices `~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0` and follow [Klipper documentation -- USB to CAN bus bridge mode](https://www.klipper3d.org/CANBUS.html#usb-to-can-bus-bridge-mode) for the rest of configuration.
+
+
+In case of `MCU 'mcu' shutdown: Timer too close`, `b'Got error -1 in can write: (105)No buffer space available'` or similar troubles, please try following steps:
+
+Step 1. Use `ip -s link show can0` or/and [Moonraker -> Settings -> MCU status](https://www.teamfdm.com/forums/topic/1524-debugging-canbus-and-communication-timeout-while-homingbytes_invalid/#comment-9910) to ensure no error/invalid AND no retransmit packages. In case of error/invalid packages please see `Step 2`. In case of no error but increasing retransmit packages please refer `Step 3`.
+
+Step 2: double check wiring and terminal resistor. A twisted pair for data signals (CAN_L & CAN_H) is almost required for line longer that 20cm.
+
+Step 3. Ensure `sudo systemctl --failed` does not show failed units. Otherwice doble check `/etc/network/interfaces.d/can0` and ensure that `ifconfig` command (from the Klipper documentation) is *not* used. `if@can0` unit must start without any issues.
+
 
 
 ## How to Build

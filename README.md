@@ -40,7 +40,7 @@ If you know proper way how to orgonise these patches and right places in armbian
 Supported boards:
 * [MKS PI](https://github.com/makerbase-mks/MKS-PI) - fully supported
 * [MKS SKIPR](https://github.com/makerbase-mks/MKS-SKIPR) - fully supported
-* QIDI X-4 and X-6 Mainboards (made by MKS for X-Plus 3 and X-Max 3) - partially supported. See [FreeQIDI](https://openqidi.com/books/build-entire-operating-system-and-klipper-from-scratch/page/freeqidi) and https://github.com/redrathnure/armbian-mkspi/issues/21 for more details.
+* QIDI X-4 and X-6 Mainboards (made by MKS for X-Plus 3 and X-Max 3) - partially supported. See [FreeQIDI](https://github.com/Phil1988/FreeQIDI) and https://github.com/redrathnure/armbian-mkspi/issues/21 for more details.
 
 MKS IPS50 LCD - works starting from `0.3.1-24.2.0-trunk` version.
 

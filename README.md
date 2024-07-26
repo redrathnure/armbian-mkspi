@@ -172,6 +172,11 @@ Step 2: double check wiring and terminal resistor. A twisted pair for data signa
 Step 3. Ensure `sudo systemctl --failed` does not show failed units. Otherwice doble check `/etc/network/interfaces.d/can0` and ensure that `ifconfig` command (from the Klipper documentation) is *not* used. `if@can0` unit must start without any issues.
 
 
+### Disable Debug Console on UART1 Interface
+
+By default UART1 is used for the kernel debug output (USB Type C connection). If you need to use the port for any other purposes, please enable `mkspi-uart1` overlay (e.g. by adding `overlays=mkspi-uart1` string inthe `/boot/armbianEnv.txt` file) and adjust device file permissions.
+This solution was tested on  QIDI X-7 (Q1 Pro mainboard) and X-6 printers. Please see [Disable kernel console debug messages for ttyS2 #31](https://github.com/redrathnure/armbian-mkspi/issues/31) for more details.
+
 
 ## How to Build
 

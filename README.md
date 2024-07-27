@@ -172,9 +172,21 @@ Step 2: double check wiring and terminal resistor. A twisted pair for data signa
 Step 3. Ensure `sudo systemctl --failed` does not show failed units. Otherwice doble check `/etc/network/interfaces.d/can0` and ensure that `ifconfig` command (from the Klipper documentation) is *not* used. `if@can0` unit must start without any issues.
 
 
-### Disable Debug Console on UART1 Interface
+### Disable Debug Console UART2  or Freeup UART1 Interface
 
-By default UART1 is used for the kernel debug output (USB Type C connection). If you need to use the port for any other purposes, please enable `mkspi-uart1` overlay (e.g. by adding `overlays=mkspi-uart1` string inthe `/boot/armbianEnv.txt` file) and adjust device file permissions.
+By default UART2 is used for the kernel debug output (ttyS2, USB Type C connection). Please disable kernel console and double check device file permissions if you need the ttyS2 for any other purposes:
+
+```
+# Or just add console=none to /boot/armbianEnv.txt manually.
+echo 'console=none' > sudo tee -a /boot/armbianEnv.txt
+
+# Grant user permissions and prevent getty from taking over the port
+echo 'KERNEL=="ttyS2",MODE="0660"' > /etc/udev/rules.d/99-ttyS2.rules
+systemctl mask serial-getty@ttyS2.service
+```
+
+A `mkspi-uart1` overlay may be used to disable LCD and Touchscreen intefraces and freeup UART1/ttyS1 for custom purposes. e.g. by adding `overlays=mkspi-uart1` string to `/boot/armbianEnv.txt` file.
+
 This solution was tested on  QIDI X-7 (Q1 Pro mainboard) and X-6 printers. Please see [Disable kernel console debug messages for ttyS2 #31](https://github.com/redrathnure/armbian-mkspi/issues/31) for more details.
 
 

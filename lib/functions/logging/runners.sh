@@ -44,7 +44,8 @@ function chroot_sdcard_apt_get() {
 		default_apt_logging=""
 	fi
 
-	local -a apt_params=("-y" "${apt_logging:-"$default_apt_logging"}") # super quiet by default, but can be tweaked up, for update for example
+	# "--allow-downgrades" to mitigate "E: Packages were downgraded and -y was used without --allow-downgrades." error
+	local -a apt_params=("-y" "${apt_logging:-"$default_apt_logging"}" "--allow-downgrades") # super quiet by default, but can be tweaked up, for update for example
 	if [[ "${MANAGE_ACNG}" == "yes" ]]; then
 		display_alert "Using managed apt-cacher-ng" "http://localhost:3142" "debug"
 		apt_params+=(

@@ -192,7 +192,7 @@ This solution was tested on  QIDI X-7 (Q1 Pro mainboard) and X-6 printers. Pleas
 
 ## How to Build
 
-The new `mkspi` board was declared. Now has support only for `current` and `edge` kernels and Ubuntu Jammy OS (CLI and desktop editions). Build process is pretty usual for Armbain build.
+The new `mkspi` board was declared. Now has support only for `current` and `edge` kernels and Ubuntu Jammy (22.04) and Noble (24.04) OS (CLI and desktop editions). Build process is pretty usual for Armbain build.
 
 
 I would advice to read official documentation, however it's short version:
@@ -203,6 +203,8 @@ I would advice to read official documentation, however it's short version:
 4. `./compile.sh` and follow instructions... Please do not forget about `BSPFREEZE=yes` build arg (or freezing kernel updates via `sudo armbian-config` right after the first login). A few ready to use commands:
   * Ubuntu Jammy with current kernel:    `./compile.sh  BOARD=mkspi BRANCH=current RELEASE=jammy    BSPFREEZE=yes BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img INSTALL_HEADERS=yes BUILD_KSRC=yes INSTALL_KSRC=yes`
   * Ubuntu Jammy with edge kernel:       `./compile.sh  BOARD=mkspi BRANCH=edge    RELEASE=jammy    BSPFREEZE=yes BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img INSTALL_HEADERS=yes BUILD_KSRC=yes INSTALL_KSRC=yes`
+  * Ubuntu Noble with current kernel:    `./compile.sh  BOARD=mkspi BRANCH=current RELEASE=noble    BSPFREEZE=yes BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img INSTALL_HEADERS=yes BUILD_KSRC=yes INSTALL_KSRC=yes`
+  * Ubuntu Noble with edge kernel:       `./compile.sh  BOARD=mkspi BRANCH=edge    RELEASE=noble    BSPFREEZE=yes BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img INSTALL_HEADERS=yes BUILD_KSRC=yes INSTALL_KSRC=yes`
   * Debian bullseye with current kernel: `./compile.sh  BOARD=mkspi BRANCH=current RELEASE=bullseye BSPFREEZE=yes BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img INSTALL_HEADERS=yes BUILD_KSRC=yes INSTALL_KSRC=yes`
   * Debian bullseye with edge kernel:    `./compile.sh  BOARD=mkspi BRANCH=edge    RELEASE=bullseye BSPFREEZE=yes BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img INSTALL_HEADERS=yes BUILD_KSRC=yes INSTALL_KSRC=yes`
   * Debian bookworm with current kernel: `./compile.sh  BOARD=mkspi BRANCH=current RELEASE=bookworm BSPFREEZE=yes BUILD_DESKTOP=no BUILD_MINIMAL=no KERNEL_CONFIGURE=no COMPRESS_OUTPUTIMAGE=sha,gpg,img INSTALL_HEADERS=yes BUILD_KSRC=yes INSTALL_KSRC=yes`

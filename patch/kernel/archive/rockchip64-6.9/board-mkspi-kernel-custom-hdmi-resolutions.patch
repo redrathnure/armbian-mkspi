@@ -2,6 +2,7 @@ From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Maxim Medvedev <redrathnure@gmail.com>
 Date: Mon, 1 Jan 2024 21:50:10 +0000
 Subject: HDMI EDID records for 800x480 resolution (a MKS IPS50 screen and similar)
+
 ---
  drivers/gpu/drm/drm_edid.c                    | 12 +++++++++-
  drivers/phy/rockchip/phy-rockchip-inno-hdmi.c |  1 +
@@ -10,10 +11,10 @@ Subject: HDMI EDID records for 800x480 resolution (a MKS IPS50 screen and simila
  4 files changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-index 5ed77e3361fd..6729857f2d8a 100644
+index a491280ca48c..6d74e4b62dcf 100644
 --- a/drivers/gpu/drm/drm_edid.c
 +++ b/drivers/gpu/drm/drm_edid.c
-@@ -1534,10 +1534,20 @@ static const struct drm_display_mode edid_cea_modes_193[] = {
+@@ -1536,10 +1536,20 @@ static const struct drm_display_mode edid_cea_modes_193[] = {
  	/* 219 - 4096x2160@120Hz 256:135 */
  	{ DRM_MODE("4096x2160", DRM_MODE_TYPE_DRIVER, 1188000, 4096, 4184,
  		   4272, 4400, 0, 2160, 2168, 2178, 2250, 0,
@@ -34,7 +35,7 @@ index 5ed77e3361fd..6729857f2d8a 100644
  /*
   * HDMI 1.4 4k modes. Index using the VIC.
   */
-@@ -3972,11 +3982,11 @@ static bool drm_edid_has_cta_extension(const struct drm_edid *drm_edid)
+@@ -4167,11 +4177,11 @@ static bool drm_edid_has_cta_extension(const struct drm_edid *drm_edid)
  }
  
  static __always_inline const struct drm_display_mode *cea_mode_for_vic(u8 vic)
@@ -48,21 +49,21 @@ index 5ed77e3361fd..6729857f2d8a 100644
  	if (vic >= 193 && vic < 193 + ARRAY_SIZE(edid_cea_modes_193))
  		return &edid_cea_modes_193[vic - 193];
 diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-index 1624f58a633a..a28f7933f1b7 100644
+index db774d97918f..375fbc8a8747 100644
 --- a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
 +++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-@@ -291,10 +291,11 @@ struct inno_hdmi_phy_drv_data {
- };
- 
+@@ -293,10 +293,11 @@ struct inno_hdmi_phy_drv_data {
  static const struct pre_pll_config pre_pll_cfg_table[] = {
- 	{ 27000000,  27000000, 1,  90, 3, 2, 2, 10, 3, 3, 4, 0, 0},
- 	{ 27000000,  33750000, 1,  90, 1, 3, 3, 10, 3, 3, 4, 0, 0},
-+	{ 30240000,  30240000, 5,  504, 3, 2, 2, 20, 4, 2, 2, 0, 0}, // Non standard screens like MKS IPS50
- 	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2, 2, 0, 0},
- 	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3, 4, 0, 0xE6AE6B},
- 	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3, 4, 0, 0},
- 	{ 59341000,  74176250, 1,  98, 0, 3, 3,  1, 3, 3, 4, 0, 0xE6AE6B},
- 	{ 59400000,  74250000, 1,  99, 1, 2, 2,  1, 3, 3, 4, 0, 0},
+ 	{ 25175000,  25175000,  3,  125, 3, 1, 1,  1, 3, 3,  4, 0, 0xe00000},
+ 	{ 25175000,  31468750,  1,   41, 0, 3, 3,  1, 3, 3,  4, 0, 0xf5554f},
+ 	{ 27000000,  27000000,  1,   36, 0, 3, 3,  1, 2, 3,  4, 0,      0x0},
+ 	{ 27000000,  33750000,  1,   45, 0, 3, 3,  1, 3, 3,  4, 0,      0x0},
++	{ 30240000,  30240000,  5,  504, 3, 2, 2, 20, 4, 2,  2, 0,      0x0}, // Non standard screens like MKS IPS50
+ 	{ 31500000,  31500000,  1,   42, 0, 3, 3,  1, 2, 3,  4, 0,      0x0},
+ 	{ 31500000,  39375000,  1,  105, 1, 3, 3, 10, 0, 3,  4, 0,      0x0},
+ 	{ 33750000,  33750000,  1,   45, 0, 3, 3,  1, 2, 3,  4, 0,      0x0},
+ 	{ 33750000,  42187500,  1,  169, 2, 3, 3, 15, 0, 3,  4, 0,      0x0},
+ 	{ 35500000,  35500000,  1,   71, 2, 2, 2,  6, 0, 3,  4, 0,      0x0},
 diff --git a/drivers/video/hdmi.c b/drivers/video/hdmi.c
 index 03c7f27dde49..8d68d34ce023 100644
 --- a/drivers/video/hdmi.c
@@ -81,7 +82,7 @@ index 03c7f27dde49..8d68d34ce023 100644
  	return "Invalid";
  }
 diff --git a/include/linux/hdmi.h b/include/linux/hdmi.h
-index 2f4dcc8d060e..a14ffd61e8bc 100644
+index 3bb87bf6bc65..be61a7954847 100644
 --- a/include/linux/hdmi.h
 +++ b/include/linux/hdmi.h
 @@ -97,10 +97,11 @@ enum hdmi_picture_aspect {

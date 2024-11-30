@@ -18,21 +18,23 @@ So the idea was to build a normal Armbian image using the available information 
 
 ## Goals
 
-Make Armbian build with `current` and `edge` kernels.     
+Prepare an Armbian build with `current` and `edge` kernels that is ready to install Klipper from scratch.     
 
 Please note:
-* Klipper, Fluid, and other related components are out of scope of this repo, please refer https://github.com/th33xitus/kiauh if you have interest in these topics.
-* original patches were taken from Makerbase repositoy https://github.com/makerbase-mks/armbian-build, this means you have to be mentally ready to see ~~this mess~~ "fast and dirty" approach. I do not have enought knowlage and time to orgonise this mess in right way. 
-If you know proper way how to orgonise these patches and right places in armbian sources for them, you are welcome to discussions or just open PRs.
-* I do not have access to full MKS PI set and cannot test all features. Main goal is to have worked following component:
-  * booting from micro SD
-  * MKSPI-TS35 TFT display (better with working touch screen :) )
-  * HDMI output
+
+* Klipper, Fluid and other related components are outside the scope of this repo. Please see [Klipper Installation And Update Helper (KIAUH)](https://github.com/dw-0/kiauh) if you are interested in these topics.
+* The original patches were taken from the [Makerbase `armbian-build` repository](https://github.com/makerbase-mks/armbian-build), this means you have to be mentally ready to see ~~this mess~~ "fast and dirty" approach. I do not have enough knowledge and time to organize this mess in the right way. 
+* I do not have access to full MKS PI set and cannot test all features. Main goal is to have worked on the following component:
+  * booting from microSD
+  * MKSPI-TS35 TFT display (ideally with working touch screen :) )
+  * worked HDMI output
   * USB ports, including USB 3 port
   * ADXL345 (SPI bus)
   * CAN bus for SKIPR board
-* If you are interested in any additional features, feel free to step into development? testing or support me by hardware.
-* ~~Currently I am focusing only on Ubuntu LTS builds (`current` and `edge` kernels). Feel free to open PRs if you would need non LTS Ubuntu or Debian images.~~ Currently Ubuntu LTS (tested) and Debian Bullseye (non tested) builds are supported.
+* Feel free to get involved in development, testing or hardware support if you are interested in additional features.
+* ~~At the moment I only focus on Ubuntu LTS builds (`current` and `edge` kernels). Feel free to open PRs if you need non-LTS Ubuntu or Debian images.~~ Ubuntu LTS (tested) and Debian Bullseye (untested) builds are supported.
+
+Feel free to discuss or just open PRs if you know the right way to orgonize these patches and the right places in the Armbian sources.
 
 
 ## Current status
@@ -42,15 +44,23 @@ Supported boards:
 * [MKS SKIPR](https://github.com/makerbase-mks/MKS-SKIPR) - fully supported
 * QIDI X-4 and X-6 Mainboards (made by MKS for X-Plus 3 and X-Max 3) - partially supported. See [FreeQIDI](https://github.com/Phil1988/FreeQIDI) and https://github.com/redrathnure/armbian-mkspi/issues/21 for more details.
 
-MKS IPS50 LCD - works starting from `0.3.1-24.2.0-trunk` version.
+MKS IPS50 LCD (with native 800x480 resolution) - supported starting from `0.3.1-24.2.0-trunk` version. The screen must be connected before system boot.
+External monitors via HDMI - supported if sreen provides valid EDID data. In the case of non-standard resolutions, the functionality may be broken.
 
-A `build-essential` and kernel header packages are preinstalled starting from `0.3.2-24.2.0-trunk` version. It should simplify Klipper installation and building custom kernel modules (e.g. WIFI modules like [RTL8188GU (RTL8710B)](https://github.com/McMCCRU/rtl8188gu) one).
+Starting with `0.3.2-24.2.0-trunk', a `build-essential' and kernel header package are bundled into the image. It should simplify Klipper installation and custom kernel module building (e.g. WIFI modules like [RTL8188GU (RTL8710B)](https://github.com/McMCCRU/rtl8188gu) one).
 
-Images should be ready for a daily usage. Everything seem to be workes, however please pay attantion:
+When the board boots from EMMC card and ADXL345 sensor is connected (SPI bus), [MKSPI-TS35 TFT display may not work (white screen)](https://github.com/makerbase-mks/MKS-PI/issues/14). Possible ~~solutions~~ workarounds:
+ * boot from microSD card
+ * short ADXL345 cables and reduce MKSPI-TS35 SPI bus clock speed
+ * connect accelerometer sensor via USB, toolhead or any other "non SPI0" interface
+ * connect ADXL345 board only when it's needed
+ * use HDMI-connected display
 
-1. Only Ubuntu builds are actively tested (use Debian ones for your own risk)
-2. Some bugs may appear from time to time. Especially it related to edge builds (based on edge 6.x kernel). Please check [release page](https://github.com/redrathnure/armbian-mkspi/releases) for more details.
-3. Please double check a [How to Configure CAN Bus](#how-to-configure-can-bus) section if you use [BTT EBB36](https://github.com/bigtreetech/EBB) or similar CAN toolhead
+The images should be ready for use on a daily basis. However, please note the following:
+
+1. Only latest LTS Ubuntu images are actively tested. Please use the Debian ones at your own risk.
+2. Bugs may appear from time to time. Especially it related to edge images. Please check [release page](https://github.com/redrathnure/armbian-mkspi/releases) for more details and feel free [to report an issue](https://github.com/redrathnure/armbian-mkspi/issues).
+3. Please double check a [How to Configure CAN Bus](#how-to-configure-can-bus) section  if you are using the [BTT EBB36](https://github.com/bigtreetech/EBB) or similar CAN toolhead
 
 
 ### ADXL345/SPI Usage
@@ -95,7 +105,7 @@ Full version:
 
 ### Package Updates via Apt Update
 
-Please double check kernel packages were freezed before running `apt update` command. E.g. run `sudo armbian-config` and check `System` -> `Freeze - Disable Armbian kernel updates` item.
+Please double check kernel packages are freezed before running `apt update` command. E.g. run `sudo armbian-config` and check `System` -> `Freeze - Disable Armbian kernel updates` item.
 
 
 ### How to Rotate Screen
@@ -138,16 +148,18 @@ sudo reboot
 
 ### How to Configure CAN Bus
 
-There are two non obvious points which you should be aware to successfully configure CAN bus:
+There are few non-obvious points that you should be aware of to successfully configure the CAN bus:
 
 1. MKS SKIPR board must be connected via USB (UART connection does not work for CAN bridge mode)
 2. By default latest images/Ubuntu distros do not have `ifconfig` command out of the box, so [Klipper documentation -- USB to CAN bus bridge mode](https://www.klipper3d.org/CANBUS.html#usb-to-can-bus-bridge-mode) will not properly work.
+3. Starting from `0.4.0-24.11.0-trunk` image, Ubuntu and Debian distro use NetworkManager by default, which means `/etc/network/interfaces.d/*` files have no effect anymore. So CANbus must be consfigured via Systemd-Networkd (see text bellow). It's OK to use NetworkManager for KlipperScreen to manage WIFI and Ethernet interfaces, and Systemd-Networkd for the CANbus interface at the same time.  
 
 Steps to configure CAN bus:
 
 1. (For SKIPR board) hook MCU via USB cable ("USB to CAN bus bridge" is not supported for UART connection type).
 2. (For SKIPR board) [compile Klipper firmware](https://klipper.discourse.group/t/mks-skipr-can-bus/5377/16) and flash MCU. Please specify bitrate/speed which will be used for toolhead. USuallu 500 000 or 1 000 000.
-3. Configure `can0` interface on MKSPI: 
+3. Configure `can0` interface on MKSPI
+3.1. Debian Interfaces file. Only for old distros, pre `0.4.0-24.11.0-trunk` images:
    ```
     cat <<-'EOF' | sudo tee -a /etc/network/interfaces.d/can0
 	allow-hotplug can0
@@ -158,7 +170,29 @@ Steps to configure CAN bus:
 		#up ip link set $IFACE txqueuelen 1024 restart-ms 200 # Bit more aggressive configuration
 
 	EOF
-   ```   
+   ``` 
+3.2. Systemd-Networkd, for modern distros,  starting with `0.4.0-24.11.0-trunk` images:
+   ```
+    cat <<-'EOF' | sudo tee /etc/systemd/network/80-can0.network
+	[Match]
+	Name=can0
+
+	[CAN]
+	BitRate=1M
+	RestartSec=200ms
+	# see also https://www.freedesktop.org/software/systemd/man/latest/systemd.network.html#[CAN]%20Section%20Options
+
+
+	[Link]
+	TransmitQueueLength=1024
+	# see also https://www.freedesktop.org/software/systemd/man/latest/systemd.network.html#%5BLink%5D%20Section%20Options
+
+	EOF
+	
+	sudo systemctl enable systemd-networkd
+	sudo systemctl start systemd-networkd
+	sudo systemctl status systemd-networkd
+   ``` 
 4. Reboot. Yes, it's important! 
 5. Hook a toolhead board, find connected devices `~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0` and follow [Klipper documentation -- USB to CAN bus bridge mode](https://www.klipper3d.org/CANBUS.html#usb-to-can-bus-bridge-mode) for the rest of configuration.
 
@@ -169,7 +203,7 @@ Step 1. Use `ip -s link show can0` or/and [Moonraker -> Settings -> MCU status](
 
 Step 2: double check wiring and terminal resistor. A twisted pair for data signals (CAN_L & CAN_H) is almost required for line longer that 20cm.
 
-Step 3. Ensure `sudo systemctl --failed` does not show failed units. Otherwice doble check `/etc/network/interfaces.d/can0` and ensure that `ifconfig` command (from the Klipper documentation) is *not* used. `if@can0` unit must start without any issues.
+Step 3. Ensure `sudo systemctl --failed` does not show failed units. (Outdated, for Debian Interfaces file only) Otherwice doble check `/etc/network/interfaces.d/can0` and ensure that `ifconfig` command (from the Klipper documentation) is *not* used. `if@can0` unit must start without any issues.
 
 
 ### Disable Debug Console UART2  or Freeup UART1 Interface
@@ -238,6 +272,7 @@ BRANCH=edge
 https://github.com/makerbase-mks/armbian-build repo contains random crap (half worked patches for legacy 4.4 Kernel and non full armbian integration)
 
 In generally it's not clear what was changed, however looks like MKS guys were not too creative and almost copy rockchip64/Renegade board. Patches include:
+
 1. Changes for `/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts` ( redeclaring a few pins, disabling some features and declaring new ones. mostly for MKSPI-TS35 screen)
 2. HDMI interface change, seems just to declare mode with 5:3 aspect ration
 3. "Patch" for `fbtft/fb_ili9341` driver. Basically redefining screen resolution.
@@ -249,7 +284,6 @@ In generally it's not clear what was changed, however looks like MKS guys were n
 ## See Also
  - https://github.com/makerbase-mks/MKS-PI - MKS delivered image, official instructions and schematic. 
  - https://github.com/makerbase-mks/armbian-build - kind of sources (state of Dec.23 - random unworked crap)
-
 
 
 

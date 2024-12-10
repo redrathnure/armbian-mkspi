@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Maxim Medvedev <redrathnure@gmail.com>
+Date: Tue, 10 Dec 2024 20:43:38 +0000
+Subject: fix: adjust tsadc config
+---
+ arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+index a29ea76f7fad..d2b0e583697c 100755
+--- a/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-roc-cc.dts
+@@ -427,10 +427,13 @@ &spdif_out {
+ &spdif_sound {
+  	status = "okay";
+ };
+ 
+ &tsadc {
++	rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
++	rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
++
+ 	status = "okay";
+ };
+ 
+ &u2phy {
+ 	status = "okay";
+-- 
+Created with Armbian build tools https://github.com/armbian/build
+
